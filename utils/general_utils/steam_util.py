@@ -1,0 +1,28 @@
+from langchain.messages import AIMessageChunk
+
+# 流式打印所有(token和日志)
+def steam_print_all(generator):
+    stream_print(steam_output( generator))
+
+
+def steam_output(generator):
+    for r in generator:
+        if r[0] == "updates":
+            print()
+            print(r)
+        if r[0] == "messages":
+            if type(r[1][0])!=AIMessageChunk:
+                continue
+            c = r[1][0].content
+            if c:
+                yield c
+
+
+# 流式打印
+def stream_print(generator):
+    for chunk in generator:
+        print(chunk, end="", flush=True)
+
+async def astream_print(generator):
+    async for chunk in generator:
+        print(chunk, end="", flush=True)
