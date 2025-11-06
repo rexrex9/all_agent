@@ -1,7 +1,7 @@
 from langchain.messages import AIMessageChunk
 
 # 流式打印所有(token和日志)
-def steam_print_all(generator):
+def stream_print_all(generator):
     stream_print(steam_output( generator))
 
 
@@ -23,6 +23,13 @@ def stream_print(generator):
     for chunk in generator:
         print(chunk, end="", flush=True)
 
+def stream_print_log(generator):
+    for chunk in generator:
+        print(chunk, flush=True)
+
+async def astream_print_log(generator):
+    async for chunk in generator:
+        print(chunk, flush=True)
 async def astream_print(generator):
     async for chunk in generator:
         print(chunk, end="", flush=True)
