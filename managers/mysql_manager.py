@@ -27,7 +27,7 @@ class MemeryManager:
         sql = f'select content,role from {cls.TABLE_NAME} where conversation_id=%s and status=1 order by created_at desc limit %s'
         params = (conversation_id,k)
         historys = mc.search_with_params(sql, params)
-        return historys
+        return historys if historys else []
 
     # 根据session_id清空会话记录,将状态改为0
     @classmethod
@@ -46,5 +46,5 @@ if __name__ == '__main__':
     message_content = 'asdasdadaaassaa'
     #MemeryManager.insert_memery(conversation_id,sender_id,sender_type,message_content)
 
-    a = MemeryManager.search_history('3c46d42655b94e0f97b211ee2a371bb2')
+    a = MemeryManager.search_history('123')
     print(a)
