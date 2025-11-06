@@ -4,7 +4,7 @@ from conn.llms import get_silicon
 from agents_manager.mytools import minio_tools,terminal_control
 from deepagents.backends import FilesystemBackend
 
-p = r'/agent_files'
+p = '/root/workspace/all_agent/agent_files'
 
 class ReceptionAgent:
     def __init__(self):
