@@ -4,7 +4,7 @@ from conn.llms import get_silicon
 from agents_manager.mytools import minio_tools,terminal_control
 from deepagents.backends import FilesystemBackend
 
-p = '/root/workspace/all_agent/agent_files'
+p = '/agent_files'
 
 class ReceptionAgent:
     def __init__(self):
@@ -15,7 +15,7 @@ class ReceptionAgent:
             model=get_silicon(), # 传一个llm
             tools=self.get_tools(), # 工具函数列表
             backend=FilesystemBackend(root_dir=p),
-            system_prompt="""你是一个通用智能体"""
+            system_prompt=f"""你是一个通用智能体,工作路径在{p}"""
         )
 
     def get_tools(self):
