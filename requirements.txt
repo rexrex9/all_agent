@@ -6,3 +6,5 @@ deepagents==0.2.4
 pymysql==1.1.2
 minio==7.2.18
 langchain-tavily==0.2.13
+langchain-mcp-adapters==0.1.12
+fastapi
