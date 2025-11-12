@@ -14,8 +14,8 @@ createApp({
         const sessions = ref([]); // 存储所有会话ID
 
         // 后端API地址 - 假设后端运行在8000端口
-        const BASE_URL = 'http://127.0.0.1:8000';
-
+        // const BASE_URL = 'http://127.0.0.1:8000';
+        const BASE_URL = 'http://115.190.35.205:8000';
         // 初始化会话
         const initSession = async () => {
             try {
