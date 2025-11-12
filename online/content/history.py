@@ -2,8 +2,8 @@
 from managers.mysql_manager import MemeryManager as mm
 from langchain.messages import AIMessageChunk
 from utils.general_utils import globle_util as gu
-from configs.maps import ROLE_MAP
-
+from configs.global_configs import ROLE_MAP
+from utils.general_utils.loggers import logger
 class ChatManager:
 
     @staticmethod
@@ -19,8 +19,7 @@ class ChatManager:
         gen = agent.chat(messages)
         for r in gen:
             if r[0] == "updates":
-                print()
-                print(r)
+                logger.info(r)
                 obj = r[1].get("model")
                 if obj is None:
                     continue
@@ -30,9 +29,7 @@ class ChatManager:
                 content = obj.content
                 session_data = obj.response_metadata if obj.response_metadata else None
                 mm.insert_memery(conversation_id, sender_id, role, content, session_data=session_data)
-            if r[0] == "messages":
-                if type(r[1][0]) != AIMessageChunk:
-                    continue
+            if r[0] == "messages" and type(r[1][0]) == AIMessageChunk and r[1][1]["langgraph_node"]=='model':
                 c = r[1][0].content
                 if c:
                     yield c

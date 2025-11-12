@@ -5,3 +5,4 @@ langchain_openai==1.0.1
 deepagents==0.2.4
 pymysql==1.1.2
 minio==7.2.18
+langchain-tavily==0.2.13

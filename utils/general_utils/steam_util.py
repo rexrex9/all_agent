@@ -1,5 +1,5 @@
 from langchain.messages import AIMessageChunk
-
+from utils.general_utils.loggers import logger
 # 流式打印所有(token和日志)
 def stream_print_all(generator):
     stream_print(steam_output( generator))
@@ -8,15 +8,13 @@ def stream_print_all(generator):
 def steam_output(generator):
     for r in generator:
         if r[0] == "updates":
-            print()
-            print(r)
+            logger.info(r[1][0])
         if r[0] == "messages":
             if type(r[1][0])!=AIMessageChunk:
                 continue
             c = r[1][0].content
             if c:
                 yield c
-
 
 # 流式打印
 def stream_print(generator):

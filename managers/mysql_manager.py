@@ -9,7 +9,8 @@ mc = MC.MysqlConn()
 class MemeryManager:
 
     TABLE_NAME = 'chat_conversations'
-
+    k = 20
+    n = 100
     # 插入会话记录
     @classmethod
     def insert_memery(cls,conversation_id,sender_id,role,content,session_data= None):
@@ -35,6 +36,12 @@ class MemeryManager:
         sql = f'update {cls.TABLE_NAME} set status=0 where conversation_id ="%s"' % conversation_id
         mc.execute(sql)
 
+    @classmethod
+    def switch_session(cls,conversation_id,n=10):
+        sql = f'select content,role from {cls.TABLE_NAME} where conversation_id=%s and status=1 order by created_at desc limit %s'
+        return list(reversed(mc.search_with_params(sql, (conversation_id,n))))
+
+
 
 if __name__ == '__main__':
     #conversation_id = MemeryManager.new_session()
@@ -46,5 +53,5 @@ if __name__ == '__main__':
     message_content = 'asdasdadaaassaa'
     #MemeryManager.insert_memery(conversation_id,sender_id,sender_type,message_content)
 
-    a = MemeryManager.search_history('123')
+    a = MemeryManager.switch_session('123')
     print(a)

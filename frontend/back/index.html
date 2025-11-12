@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>通用Agent</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .app {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .chat-container {
+            height: 500px;
+            overflow-y: auto;
+            padding: 20px;
+            background: #f8fafc;
+        }
+
+        .message {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .message.user {
+            flex-direction: row-reverse;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .avatar.user {
+            background: #4f46e5;
+        }
+
+        .avatar.bot {
+            background: #10b981;
+        }
+
+        .bubble {
+            max-width: 70%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            line-height: 1.4;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .bubble.user {
+            background: #4f46e5;
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .bubble.bot {
+            background: white;
+            color: #374151;
+            border: 1px solid #e5e7eb;
+            border-bottom-left-radius: 4px;
+        }
+
+        .input-area {
+            padding: 20px;
+            border-top: 1px solid #e5e7eb;
+            background: white;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .input-row input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid #d1d5db;
+            border-radius: 25px;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .input-row input:focus {
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .input-row button {
+            padding: 12px 24px;
+            background: #4f46e5;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        .input-row button:hover {
+            background: #4338ca;
+        }
+
+        .input-row button:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+
+        .file-upload-area {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 0;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .file-button {
+            padding: 8px 16px;
+            background: #f3f4f6;
+            border: 1px dashed #d1d5db;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .file-button:hover {
+            border-color: #4f46e5;
+            background: #eef2ff;
+        }
+
+        .file-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: #f3f4f6;
+            border-radius: 15px;
+            font-size: 12px;
+        }
+
+        .file-remove {
+            color: #ef4444;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .session-controls {
+            padding: 15px 20px;
+            background: #f1f5f9;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .session-controls button {
+            padding: 8px 16px;
+            background: white;
+            border: 1px solid #d1d5db;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+
+        .session-controls button:hover {
+            border-color: #4f46e5;
+            color: #4f46e5;
+        }
+
+        .session-id {
+            font-size: 12px;
+            color: #6b7280;
+            background: white;
+            padding: 6px 12px;
+            border-radius: 15px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .typing-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .typing-dot {
+            width: 6px;
+            height: 6px;
+            background: #9ca3af;
+            border-radius: 50%;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes typing {
+            0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #6b7280;
+            padding: 60px 20px;
+        }
+
+        .empty-state h3 {
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .file-message {
+            background: #eef2ff;
+            border: 1px solid #c7d2fe;
+            border-radius: 8px;
+            padding: 8px 12px;
+            margin-top: 5px;
+        }
+
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: #4f46e5;
+        }
+
+        .streaming-content {
+            min-height: 20px;
+        }
+
+        .cursor-blink {
+            display: inline-block;
+            width: 2px;
+            height: 1em;
+            background: #4f46e5;
+            margin-left: 2px;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="app">
+            <div class="header">
+                <h1>🤖 通用Agent</h1>
+            </div>
+
+            <div class="session-controls">
+                <button @click="newSession">新建会话</button>
+                <button @click="clearSession">清空当前会话</button>
+                <span class="session-id">会话ID: {{ sessionId }}</span>
+            </div>
+
+            <div class="chat-container" ref="chatContainer">
+                <div v-if="messages.length === 0" class="empty-state">
+                    <h3>开始与Agent对话吧！</h3>
+                    <p>输入您的问题或上传文件，Agent将为您提供帮助</p>
+                </div>
+
+                <div v-for="message in messages" :key="message.id"
+                     :class="['message', message.type]">
+                    <div :class="['avatar', message.type]">
+                        {{ message.type === 'user' ? '👤' : '🤖' }}
+                    </div>
+                    <div :class="['bubble', message.type]">
+                        <div class="streaming-content">
+                            {{ message.content }}
+                            <span v-if="message.streaming" class="cursor-blink"></span>
+                        </div>
+                        <div v-if="message.files && message.files.length" class="file-message">
+                            <div v-for="file in message.files" :key="file.name" class="file-info">
+                                📎 {{ file.name }} ({{ formatFileSize(file.size) }})
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="input-area">
+                <!-- 文件上传区域 -->
+                <div class="file-upload-area">
+                    <input
+                        type="file"
+                        ref="fileInput"
+                        class="file-input"
+                        multiple
+                        @change="handleFileSelect"
+                        accept=".txt,.pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png,.gif"
+                    >
+                    <button class="file-button" @click="triggerFileInput">
+                        📎 选择文件
+                    </button>
+                    <span v-if="selectedFiles.length > 0" style="font-size: 12px; color: #6b7280;">
+                        已选择 {{ selectedFiles.length }} 个文件
+                    </span>
+                </div>
+
+                <!-- 文件列表 -->
+                <div v-if="selectedFiles.length > 0" class="file-list">
+                    <div v-for="(file, index) in selectedFiles" :key="index" class="file-item">
+                        <span>📎 {{ file.name }}</span>
+                        <span class="file-remove" @click="removeFile(index)">×</span>
+                    </div>
+                </div>
+
+                <!-- 输入区域 -->
+                <div class="input-row">
+                    <input
+                        v-model="inputText"
+                        @keyup.enter="sendMessage"
+                        placeholder="输入您的问题..."
+                        :disabled="isLoading"
+                    >
+                    <button @click="sendMessage" :disabled="(!inputText && selectedFiles.length === 0) || isLoading">
+                        {{ isLoading ? '发送中...' : '发送' }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const { createApp, ref, onMounted, nextTick } = Vue;
+
+        createApp({
+            setup() {
+                const messages = ref([]);
+                const inputText = ref('');
+                const isLoading = ref(false);
+                const sessionId = ref('');
+                const chatContainer = ref(null);
+                const fileInput = ref(null);
+                const selectedFiles = ref([]);
+
+                // 如果后端在同一域名下，可以使用相对路径避免 CORS
+                const BASE_URL = 'http://localhost:8000';
+
+                // 或者如果你使用代理服务器，改为：
+                // const BASE_URL = '/api';  // 需要配置代理
+
+                // 初始化会话
+                const initSession = async () => {
+                    try {
+                        const response = await fetch(`${BASE_URL}/new_session`);
+                        const data = await response.json();
+                        sessionId.value = data.session_id || 'default';
+                    } catch (error) {
+                        console.error('初始化会话失败:', error);
+                        sessionId.value = 'default';
+                    }
+                };
+
+                // 触发文件选择
+                const triggerFileInput = () => {
+                    fileInput.value.click();
+                };
+
+                // 处理文件选择
+                const handleFileSelect = (event) => {
+                    const files = Array.from(event.target.files);
+                    selectedFiles.value.push(...files);
+                    event.target.value = '';
+                };
+
+                // 移除文件
+                const removeFile = (index) => {
+                    selectedFiles.value.splice(index, 1);
+                };
+
+                // 格式化文件大小
+                const formatFileSize = (bytes) => {
+                    if (bytes === 0) return '0 B';
+                    const k = 1024;
+                    const sizes = ['B', 'KB', 'MB', 'GB'];
+                    const i = Math.floor(Math.log(bytes) / Math.log(k));
+                    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+                };
+
+                // 上传文件到后端
+                const uploadFiles = async () => {
+                    if (selectedFiles.value.length === 0) return [];
+
+                    const uploadedFiles = [];
+
+                    for (const file of selectedFiles.value) {
+                        const formData = new FormData();
+                        formData.append('file', file);
+
+                        try {
+                            const response = await fetch(`${BASE_URL}/upload`, {
+                                method: 'POST',
+                                body: formData
+                            });
+
+                            if (response.ok) {
+                                const result = await response.json();
+                                uploadedFiles.push({
+                                    name: file.name,
+                                    size: file.size,
+                                    url: result.url || '',
+                                    id: result.file_id || ''
+                                });
+                            } else {
+                                console.error(`文件 ${file.name} 上传失败`);
+                            }
+                        } catch (error) {
+                            console.error(`文件 ${file.name} 上传失败:`, error);
+                        }
+                    }
+
+                    return uploadedFiles;
+                };
+
+                // 流式读取响应 - 修复版本（使用响应式变量）
+                const streamingContent = ref('');
+
+                const readStream = async (reader, messageIndex) => {
+                    const decoder = new TextDecoder('utf-8');
+                    streamingContent.value = '';
+
+                    try {
+                        let chunkCount = 0;
+                        while (true) {
+                            const { done, value } = await reader.read();
+
+                            if (done) {
+                                console.log('✅ 流式传输完成，共收到', chunkCount, '个数据块');
+                                break;
+                            }
+
+                            chunkCount++;
+                            const chunk = decoder.decode(value, { stream: true });
+                            console.log(`📦 收到第 ${chunkCount} 个数据块:`, chunk.length, '字节');
+
+                            // 累加到响应式变量
+                            streamingContent.value += chunk;
+
+                            // 通过数组索引直接更新（关键！）
+                            messages.value[messageIndex].content = streamingContent.value;
+
+                            // 滚动到底部
+                            await nextTick();
+                            scrollToBottom();
+                        }
+
+                        // 处理可能剩余的字节
+                        const finalChunk = decoder.decode();
+                        if (finalChunk) {
+                            console.log('📦 最终数据块:', finalChunk.length, '字节');
+                            streamingContent.value += finalChunk;
+                            messages.value[messageIndex].content = streamingContent.value;
+                            await nextTick();
+                            scrollToBottom();
+                        }
+                    } catch (error) {
+                        console.error('❌ 流式读取错误:', error);
+                        streamingContent.value += '\n\n[读取响应时发生错误: ' + error.message + ']';
+                        messages.value[messageIndex].content = streamingContent.value;
+                    }
+                };
+
+                // 发送消息（支持流式传输）
+                const sendMessage = async () => {
+                    if ((!inputText.value.trim() && selectedFiles.value.length === 0) || isLoading.value) return;
+
+                    const userMessage = {
+                        id: Date.now(),
+                        type: 'user',
+                        content: inputText.value.trim(),
+                        files: selectedFiles.value.map(file => ({
+                            name: file.name,
+                            size: file.size
+                        }))
+                    };
+
+                    messages.value.push(userMessage);
+                    const question = inputText.value.trim();
+                    inputText.value = '';
+                    isLoading.value = true;
+
+                    // 添加流式响应的消息占位
+                    messages.value.push({
+                        id: Date.now() + 1,
+                        type: 'bot',
+                        content: '',
+                        streaming: true
+                    });
+
+                    // 记录消息索引（关键！）
+                    const botMessageIndex = messages.value.length - 1;
+
+                    scrollToBottom();
+
+                    try {
+                        // 如果有文件，先上传文件
+                        let uploadedFiles = [];
+                        if (selectedFiles.value.length > 0) {
+                            uploadedFiles = await uploadFiles();
+                        }
+
+                        console.log('📤 发送请求到后端...');
+
+                        // 发送聊天消息到后端流式接口
+                        const response = await fetch(`${BASE_URL}/chat`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                query: question,
+                                session_id: sessionId.value,
+                                // files: uploadedFiles
+                            })
+                        });
+
+                        console.log('📥 响应状态:', response.status);
+                        console.log('📥 Content-Type:', response.headers.get('content-type'));
+
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+
+                        if (!response.body) {
+                            throw new Error('Response body is not available');
+                        }
+
+                        console.log('🔄 开始读取流...');
+                        const reader = response.body.getReader();
+                        await readStream(reader, botMessageIndex);
+
+                    } catch (error) {
+                        console.error('❌ 发送消息失败:', error);
+                        messages.value[botMessageIndex].content = '抱歉，发生了错误：' + error.message;
+                    } finally {
+                        messages.value[botMessageIndex].streaming = false;
+                        isLoading.value = false;
+                        selectedFiles.value = [];
+                        scrollToBottom();
+                    }
+                };
+
+                // 新建会话
+                const newSession = async () => {
+                    try {
+                        const response = await fetch(`${BASE_URL}/new_session`);
+                        const data = await response.json();
+                        sessionId.value = data.session_id;
+                        messages.value = [];
+                        selectedFiles.value = [];
+                    } catch (error) {
+                        console.error('新建会话失败:', error);
+                    }
+                };
+
+                // 清空当前会话
+                const clearSession = async () => {
+                    try {
+                        await fetch(`${BASE_URL}/clear_session`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                session_id: sessionId.value
+                            })
+                        });
+                        messages.value = [];
+                        selectedFiles.value = [];
+                    } catch (error) {
+                        console.error('清空会话失败:', error);
+                    }
+                };
+
+                // 滚动到底部
+                const scrollToBottom = () => {
+                    nextTick(() => {
+                        if (chatContainer.value) {
+                            chatContainer.value.scrollTop = chatContainer.value.scrollHeight;
+                        }
+                    });
+                };
+
+                onMounted(() => {
+                    initSession();
+                });
+
+                return {
+                    messages,
+                    inputText,
+                    isLoading,
+                    sessionId,
+                    chatContainer,
+                    fileInput,
+                    selectedFiles,
+                    sendMessage,
+                    newSession,
+                    clearSession,
+                    triggerFileInput,
+                    handleFileSelect,
+                    removeFile,
+                    formatFileSize,
+                    scrollToBottom
+                };
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>
