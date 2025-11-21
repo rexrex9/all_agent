@@ -1,7 +1,7 @@
 from minio import Minio
 from configs import config as cfg
 
-
+# 115.190.35.205:9090
 class MinioConn:
     def __init__(self):
         self.client = self.create_client()
@@ -37,4 +37,4 @@ class MinioConn:
 if __name__ == "__main__":
 
     mc = MinioConn()
-    print(mc.gen_presigned_url("点名器改.exe"))
+    print(mc.upload_obj('test.txt', 'D:/test.txt'))

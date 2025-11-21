@@ -4,7 +4,7 @@ from env.serect import Tavily_SEARCH_KEY
 import asyncio
 
 
-def get_search_tools():
+def get_tools():
     client = MultiServerMCPClient(
         {
             "demo": {

@@ -7,4 +7,9 @@ pymysql==1.1.2
 minio==7.2.18
 langchain-tavily==0.2.13
 langchain-mcp-adapters==0.1.12
-fastapi
+python-pptx==1.0.2
+
+
+fastapi==0.120.3
+websockets==15.0.1
+pip install 'markitdown[all]'
