@@ -27,7 +27,7 @@ class ReceptionAgent:
         )
 
     def _get_subagent(self):
-        return [ppt_agent.get_agent()]
+        return []#ppt_agent.get_agent()]
 
     def _get_tools(self):
         tools = [gen_image.generate_image,read_doc_tools.get_file_content]

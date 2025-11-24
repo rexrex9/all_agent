@@ -17,7 +17,7 @@ class FileDownloadMiddleware(AgentMiddleware[CustomState]):
         super().__init__()
 
     async def abefore_agent(self, state, runtime):
-        logger.info(state)
+        #logger.info(state)
         files = state.get('files')
         dir_path = os.path.join(ROOT_PATH_SYSTEM, rt.get_thread_id(runtime), USER_UPLOAD_PATH)
         await asyncio.to_thread(os.makedirs, dir_path, exist_ok=True)
