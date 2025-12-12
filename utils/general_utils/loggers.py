@@ -2,8 +2,8 @@
 import logging
 # 导入路径操作库
 import os
-from datas import filepaths as fp
-LOG_FILE = os.path.join(fp.LOG_DIR, 'app.log')
+from base.configs import LOG_DIR
+LOG_FILE = os.path.join(LOG_DIR, 'app.log')
 
 def setup_logging(log_file=LOG_FILE):
     # 创建日志目录

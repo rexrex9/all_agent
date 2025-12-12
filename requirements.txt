@@ -8,6 +8,8 @@ minio==7.2.18
 langchain-tavily==0.2.13
 langchain-mcp-adapters==0.1.12
 python-pptx==1.0.2
-
+pypandoc==1.16.2
 langgraph-cli[inmem]
 markitdown[all]
+a2a-sdk[all]
+psycopg

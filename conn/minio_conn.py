@@ -1,11 +1,12 @@
 from minio import Minio
-from configs import config as cfg
+from base import configs as cfg
 
-# 115.190.35.205:9090
+
 class MinioConn:
     def __init__(self):
         self.client = self.create_client()
         self.bucket_name = 'stores'
+        self._init_bucket()
 
     def create_client(self):
         """连接MINIO客户端"""
@@ -15,6 +16,12 @@ class MinioConn:
             secret_key=cfg.MINIO.SECRET_KEY,
             secure=False
         )
+    def _init_bucket(self):
+        """创建bucket"""
+        if self.client.bucket_exists(self.bucket_name):
+            return
+        self.client.make_bucket(self.bucket_name)
+
 
     def upload_obj(self, object_name, file_path):
         """
@@ -32,9 +39,7 @@ class MinioConn:
         :param object_name: minio文件名
         :return: 下载的url
         """
-        return self.client.presigned_get_object(self.bucket_name, object_name)
+        presigned_url = self.client.presigned_get_object(self.bucket_name, object_name)
+        return presigned_url
 
-if __name__ == "__main__":
 
-    mc = MinioConn()
-    print(mc.upload_obj('test.txt', 'D:/test.txt'))

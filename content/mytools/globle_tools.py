@@ -1,6 +1,7 @@
 import datetime
 import subprocess
-
+from langchain.tools import tool
+@ tool
 def get_current_time():
     """
     获取当前时间
@@ -8,7 +9,7 @@ def get_current_time():
     """
     return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-
+@ tool
 def run_command(command: str):
     """
     运行终端命令

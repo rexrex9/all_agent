@@ -44,11 +44,58 @@ def get_folder_file_update_time_max(folder_path):
     return file_update_time_max
 
 
+def get_directory_tree(root_dir='.'):
+    """
+    生成美观的树形目录结构
+    示例输出:
+    project/
+    ├── src/
+    │   ├── main.py
+    │   └── utils.py
+    ├── data/
+    └── README.md
+    """
+    lines = []
+    def add_tree(path, prefix=''):
+        """递归添加树结构"""
+        # 获取所有条目并排序
+        try:
+            items = sorted(os.listdir(path), key=lambda x: (not os.path.isdir(os.path.join(path, x)), x.lower()))
+        except PermissionError:
+            lines.append(f"{prefix}[权限不足]")
+            return
+
+        for i, item in enumerate(items):
+            full_path = os.path.join(path, item)
+            is_last = (i == len(items) - 1)
+
+            # 确定连接符号
+            connector = '└── ' if is_last else '├── '
+
+            if os.path.isdir(full_path):
+                # 目录
+                lines.append(f"{prefix}{connector}{item}/")
+                # 递归处理子目录
+                extension = '    ' if is_last else '│   '
+                add_tree(full_path, prefix + extension)
+            else:
+                # 文件
+                lines.append(f"{prefix}{connector}{item}")
+
+    # 添加根目录
+    #root_name = os.path.basename(os.path.abspath(root_dir))
+    #lines.append(f"{root_name}/")
+    add_tree(root_dir)
+
+    return '\n'.join(lines)
+
 
 if __name__ == "__main__":
-    folder_path = r'D:\workspace\pythonworkspace\projects\all_agent'
-    #get_folder_file_update_time(folder_path)
-    file_path = r'D:\workspace\pythonworkspace\projects\all_agent\utils\general_utils\os_util.py'
-    a = get_folder_file_update_time_max(folder_path)
+    folder_path = r'D:\agent_files\46ae1177-34a0-45cf-bc4c-c2d1c56974e1'
+    # #get_folder_file_update_time(folder_path)
+    # file_path = r'D:\workspace\pythonworkspace\projects\all_agent\utils\general_utils\os_util.py'
+    # a = get_folder_file_update_time_max(folder_path)
+    # print(a)
+    # print(type(a))
+    a = get_directory_tree(folder_path)
     print(a)
-    print(type(a))

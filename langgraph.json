@@ -3,5 +3,10 @@
   "graphs": {
     "agent": "./agent.py:agent"
   },
-  "env": ".env"
+  "env": ".env",
+  "store": {
+    "enabled": true
+  },
+  "allow_overwrite": true,
+  "allow-blocking":  true
 }

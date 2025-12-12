@@ -1,7 +1,6 @@
 from markitdown import MarkItDown
 
 md = MarkItDown()
-#/agent_files/4cefbc33-1bd8-4b81-aa75-50b27d3ca1f8/user_uploads/agent.md
 
 def get_file_content(file_path):
     """

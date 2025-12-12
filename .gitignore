@@ -136,7 +136,7 @@ dmypy.json
 
 
 /env/serect.py
-/configs/config.py
+/base/config.py
 /back/
-/agents_manager/aback/
+/content/aback/
 /aback/

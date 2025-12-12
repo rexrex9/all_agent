@@ -1,0 +1,142 @@
+services:
+  # PostgreSQL 数据库
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: allagent-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - "5433:5432"  # 主机访问端口
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]  # 这里应该是 postgres
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - allagent-network
+
+  # Redis 缓存
+  redis:
+    image: redis:6
+    container_name: allagent-redis
+    command: redis-server --appendonly yes --requirepass redis123
+    #ports:
+    #  - "6379:6379"  # 主机访问端口
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - allagent-network
+
+  # MinIO 对象存储
+  minio:
+    image: minio/minio:latest
+    container_name: allagent-minio
+    ports:
+      - "9000:9000"  # API 端口
+      - "9001:9001"  # 控制台端口
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+      MINIO_DEFAULT_BUCKETS: "stores"  # 预创建桶
+      MINIO_SECURE: "false"
+    volumes:
+      - minio_data:/data
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:9000/minio/health/live" ]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+    networks:
+      - allagent-network
+
+  # ppt-mcp
+  ppt-mcp:
+    build:
+      context: ./sub_projects/ppt-mcp  # 前端项目路径
+      dockerfile: Dockerfile
+    container_name: allagent-ppt-mcp
+    command: python server.py
+    #ports:
+    #  - "4810:4810"  # 主机访问端口
+    volumes:
+      - agent_files:/agent_files
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:4810/ok" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - allagent-network
+
+  allagent:
+    build:
+      context: .              # Dockerfile 所在目录
+      dockerfile: Dockerfile   # Dockerfile 文件名（如果是默认名可以省略这行）
+    container_name: allagent-server
+    ports:
+      - "2024:8000"
+    command: langgraph up --port 8000
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+      ppt-mcp:
+        condition: service_healthy
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      DATABASE_URI: postgresql://postgres:postgres@postgres:5432/postgres
+      REDIS_URI: redis://:redis123@redis:6379
+      MINIO_ENDPOINT: "192.168.2.15:9000"
+      MINIO_ACCESS_KEY: "minioadmin"
+      MINIO_SECRET_KEY: "minioadmin"
+      PPT_MCP_URL: "http://ppt-mcp:4810/mcp"
+    volumes:
+      - agent_files:/agent_files
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8000/ok" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 90s
+    networks:
+      - allagent-network
+
+  # 前端服务 - Agent Chat UI
+  agent-chat-ui:
+    build:
+      context: ./sub_projects/agent-chat-ui  # 前端项目路径
+      dockerfile: Dockerfile
+    container_name: allagent-frontend
+    ports:
+      - "3000:3000"  # 前端访问端口
+    depends_on:
+      allagent:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - allagent-network
+
+volumes:
+  postgres_data:
+  redis_data:
+  minio_data:
+  agent_files:
+
+networks:
+  allagent-network:
+    driver: bridge

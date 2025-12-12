@@ -12,16 +12,17 @@ def get_uuid():
 def get_platform():
     platform = sys.platform
     if platform.startswith("win"):
-        print("这是 Windows 系统")
+        #print("这是 Windows 系统")
         return 0
     elif platform.startswith("linux"):
-        print("这是 Linux 系统")
+        #print("这是 Linux 系统")
         return 1
     elif platform == "darwin":
-        print("这是 macOS 系统")
+        #print("这是 macOS 系统")
         return 2
 
 
 
 if __name__ == '__main__':
     print(len(gen_hash("123")))
+    print(uuid.uuid4())

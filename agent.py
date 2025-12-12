@@ -1,3 +1,3 @@
-from agents_manager import all_agent
+from content import all_agent
 
 agent = all_agent.ReceptionAgent().agent
