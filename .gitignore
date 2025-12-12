@@ -140,3 +140,6 @@ dmypy.json
 /back/
 /content/aback/
 /aback/
+/.langgraph_api/
+
+/base/record.txt
