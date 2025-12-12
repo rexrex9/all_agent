@@ -143,3 +143,12 @@ dmypy.json
 /.langgraph_api/
 
 /base/record.txt
+/sub_projects/agent-chat-ui/.git
+/sub_projects/ppt-mcp/.git
+/sub_projects/ppt-mcp/pptx_mcp_server.egg-info/
+/sub_projects/ppt-mcp/agent_examples/
+/sub_projects/ppt-mcp/.idea/
+/sub_projects/ppt-mcp/tests/
+/sub_projects/agent-chat-ui/.next/
+/sub_projects/agent-chat-ui/.idea/
+/sub_projects/agent-chat-ui/node_modules/
