@@ -40,8 +40,8 @@ services:
       - "${MINIO_PORT:-9000}:9000"  # API 端口
       - "${MINIO_CONSOLE_port:-9001}:9001"  # 控制台端口
     environment:
-      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY:minioadmin}
-      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY:minioadmin}
+      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY:-minioadmin}
       MINIO_SECURE: "false"
     volumes:
       - minio_data:/data
