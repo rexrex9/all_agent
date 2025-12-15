@@ -41,8 +41,8 @@ services:
     image: minio/minio:latest
     container_name: allagent-minio
     ports:
-      - "9000:9000"  # API 端口
-      - "9001:9001"  # 控制台端口
+      - "9900:9000"  # API 端口
+      - "9901:9001"  # 控制台端口
     environment:
       MINIO_ROOT_USER: minioadmin
       MINIO_ROOT_PASSWORD: minioadmin
@@ -101,7 +101,7 @@ services:
     environment:
       DATABASE_URI: postgresql://postgres:postgres@postgres:5432/postgres
       REDIS_URI: redis://:redis123@redis:6379
-      MINIO_ENDPOINT: "192.168.2.15:9000"
+      MINIO_ENDPOINT: "192.168.2.15:9900"
       MINIO_ACCESS_KEY: "minioadmin"
       MINIO_SECRET_KEY: "minioadmin"
       PPT_MCP_URL: "http://ppt-mcp:4810/mcp"
