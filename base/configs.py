@@ -2,12 +2,12 @@ import os
 from utils.general_utils.globle_util import get_platform
 
 LOG_DIR = os.path.dirname(__file__)
+MINIO_HOST = os.getenv("MINIO_HOST") if os.getenv("MINIO_HOST") else "115.190.35.205"
+MINIO_PORT = os.getenv("MINIO_PORT") if os.getenv("MINIO_PORT") else "9000"
+MINIO_ENDPOINT = f"{MINIO_HOST}:{MINIO_PORT}"
+MINIO_ACCESS_KEY = os.getenv("MINIO_ACCESS_KEY") if os.getenv("MINIO_ACCESS_KEY") else "rexrex92"
+MINIO_SECRET_KEY = os.getenv("MINIO_SECRET_KEY") if os.getenv("MINIO_SECRET_KEY") else "rexrex92"
 
-class MINIO:
-    # 前端 9090 后台 9000
-    ENDPOINT = os.getenv("MINIO_ENDPOINT") if os.getenv("MINIO_ENDPOINT") else "115.190.35.205:9000"
-    ACCESS_KEY = os.getenv("MINIO_ACCESS_KEY") if os.getenv("MINIO_ACCESS_KEY") else "rexrex92"
-    SECRET_KEY = os.getenv("MINIO_SECRET_KEY") if os.getenv("MINIO_SECRET_KEY") else "rexrex92"
 
 USER_UPLOAD_PATH = 'user_uploads'
 GENERATE_IMAGE_PATH = 'generate_images'

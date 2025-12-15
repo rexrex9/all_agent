@@ -7,8 +7,6 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: postgres
-    ports:
-      - "5433:5432"  # 主机访问端口
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -24,8 +22,6 @@ services:
     image: redis:6
     container_name: allagent-redis
     command: redis-server --appendonly yes --requirepass redis123
-    #ports:
-    #  - "6379:6379"  # 主机访问端口
     volumes:
       - redis_data:/data
     healthcheck:
@@ -41,12 +37,11 @@ services:
     image: minio/minio:latest
     container_name: allagent-minio
     ports:
-      - "9900:9000"  # API 端口
-      - "9901:9001"  # 控制台端口
+      - "${MINIO_PORT:-9000}:9000"  # API 端口
+      - "${MINIO_CONSOLE_port:-9001}:9001"  # 控制台端口
     environment:
-      MINIO_ROOT_USER: minioadmin
-      MINIO_ROOT_PASSWORD: minioadmin
-      MINIO_DEFAULT_BUCKETS: "stores"  # 预创建桶
+      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY:minioadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY:minioadmin}
       MINIO_SECURE: "false"
     volumes:
       - minio_data:/data
@@ -66,8 +61,6 @@ services:
       dockerfile: Dockerfile
     container_name: allagent-ppt-mcp
     command: python server.py
-    #ports:
-    #  - "4810:4810"  # 主机访问端口
     volumes:
       - agent_files:/agent_files
     healthcheck:
@@ -101,9 +94,6 @@ services:
     environment:
       DATABASE_URI: postgresql://postgres:postgres@postgres:5432/postgres
       REDIS_URI: redis://:redis123@redis:6379
-      MINIO_ENDPOINT: "192.168.2.15:9900"
-      MINIO_ACCESS_KEY: "minioadmin"
-      MINIO_SECRET_KEY: "minioadmin"
       PPT_MCP_URL: "http://ppt-mcp:4810/mcp"
     volumes:
       - agent_files:/agent_files
@@ -123,7 +113,7 @@ services:
       dockerfile: Dockerfile
     container_name: allagent-frontend
     ports:
-      - "3000:3000"  # 前端访问端口
+      - "${UI_PORT:-3000}:3000"  # 前端访问端口
     depends_on:
       allagent:
         condition: service_healthy
