@@ -6,6 +6,7 @@ import React, {
   ReactNode,
   useState,
   useEffect,
+  useRef,
 } from "react";
 import { useStream } from "@langchain/langgraph-sdk/react";
 import { type Message } from "@langchain/langgraph-sdk";
@@ -48,6 +49,7 @@ async function sleep(ms = 4000) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+// 保持简单的 boolean 返回
 async function checkGraphStatus(
   apiUrl: string,
   apiKey: string | null,
@@ -59,6 +61,7 @@ async function checkGraphStatus(
           "X-Api-Key": apiKey,
         },
       }),
+      signal: AbortSignal.timeout(5000), // 添加超时
     });
 
     return res.ok;
@@ -81,6 +84,9 @@ const StreamSession = ({
 }) => {
   const [threadId, setThreadId] = useQueryState("threadId");
   const { getThreads, setThreads } = useThreads();
+  const [hasShownError, setHasShownError] = useState(false);
+  const initialCheckDone = useRef(false);
+
   const streamValue = useTypedStream({
     apiUrl,
     apiKey: apiKey ?? undefined,
@@ -104,22 +110,49 @@ const StreamSession = ({
   });
 
   useEffect(() => {
-    checkGraphStatus(apiUrl, apiKey).then((ok) => {
-      if (!ok) {
-        toast.error("Failed to connect to LangGraph server", {
-          description: () => (
-            <p>
-              Please ensure your graph is running at <code>{apiUrl}</code> and
-              your API key is correctly set (if connecting to a deployed graph).
-            </p>
-          ),
-          duration: 10000,
-          richColors: true,
-          closeButton: true,
-        });
+    // 避免重复检查
+    if (initialCheckDone.current) return;
+
+    const checkConnection = async () => {
+      try {
+        console.log(`Checking connection to ${apiUrl}...`);
+        const ok = await checkGraphStatus(apiUrl, apiKey);
+
+        if (!ok && !hasShownError) {
+          console.warn(`Connection check failed for ${apiUrl}`);
+          setHasShownError(true);
+
+          // 只在第一次失败时显示错误
+          toast.error("Failed to connect to LangGraph server", {
+            description: () => (
+              <div>
+                <p>
+                  Please ensure your graph is running at <code>{apiUrl}</code>
+                </p>
+                <p className="text-sm mt-1">
+                  {apiKey ? "API key is set, but connection failed." : "No API key set (this is OK for local deployments)."}
+                </p>
+              </div>
+            ),
+            duration: 8000,
+            richColors: true,
+            closeButton: true,
+          });
+        } else if (ok) {
+          console.log(`✅ Successfully connected to ${apiUrl}`);
+        }
+      } catch (error) {
+        console.error('Connection check error:', error);
+      } finally {
+        initialCheckDone.current = true;
       }
-    });
-  }, [apiKey, apiUrl]);
+    };
+
+    // 延迟检查，给应用一些初始化时间
+    const timer = setTimeout(checkConnection, 2000);
+
+    return () => clearTimeout(timer);
+  }, [apiKey, apiUrl, hasShownError]);
 
   return (
     <StreamContext.Provider value={streamValue}>
@@ -149,9 +182,8 @@ export const StreamProvider: React.FC<{ children: ReactNode }> = ({
         if (response.ok) {
           const data = await response.json();
           setEnvVars({
-            // Use API_URL first (runtime env var), then NEXT_PUBLIC_API_URL (build time env var)
-            apiUrl: data.API_URL || process.env.NEXT_PUBLIC_API_URL,
-            assistantId: data.ASSISTANT_ID || process.env.NEXT_PUBLIC_ASSISTANT_ID,
+            apiUrl: data.API_URL || '',
+            assistantId: data.ASSISTANT_ID || '',
           });
         }
       } catch (error) {
@@ -178,14 +210,13 @@ export const StreamProvider: React.FC<{ children: ReactNode }> = ({
   };
 
   // Determine final values to use, prioritizing URL params then env vars, then defaults
-  const finalApiUrl = process.env.AGENT_API_URL||process.env.NEXT_PUBLIC_API_URL || apiUrl || envVars.apiUrl || DEFAULT_API_URL;
-  const finalAssistantId = process.env.NEXT_PUBLIC_ASSISTANT_ID || assistantId || envVars.assistantId || DEFAULT_ASSISTANT_ID;
+  const finalApiUrl = apiUrl || envVars.apiUrl || DEFAULT_API_URL;
+  const finalAssistantId = assistantId || envVars.assistantId || DEFAULT_ASSISTANT_ID;
 
-  console.log('API Route Request - Current Environment Variables:');
-  console.log('API_URL:', apiUrl);
-  console.log('ASSISTANT_ID:', assistantId);
-  console.log('NEXT_PUBLIC_API_URL:', process.env.NEXT_PUBLIC_API_URL);
-
+  console.log('Runtime values:');
+  console.log('URL param apiUrl:', apiUrl);
+  console.log('Fetched envVars.apiUrl:', envVars.apiUrl);
+  console.log('Final apiUrl:', finalApiUrl);
 
   // Show the form if we: don't have an API URL, or don't have an assistant ID
   if (!finalApiUrl || !finalAssistantId) {

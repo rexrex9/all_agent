@@ -119,7 +119,7 @@ services:
         condition: service_healthy
     restart: unless-stopped
     environment:
-      AGENT_API_URL: "http://${HOST_IP}:${AGENT_SERVER_PORT:-8000}"
+      API_URL: "http://${HOST_IP}:${AGENT_SERVER_PORT:-8000}"
     networks:
       - allagent-network
 

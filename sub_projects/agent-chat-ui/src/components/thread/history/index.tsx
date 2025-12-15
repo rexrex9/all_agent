@@ -82,8 +82,7 @@ export default function ThreadHistory() {
     parseAsBoolean.withDefault(false),
   );
 
-  const { getThreads, threads, setThreads, threadsLoading, setThreadsLoading } =
-    useThreads();
+  const { getThreads, threads, setThreads, threadsLoading, setThreadsLoading } = useThreads();
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -92,7 +91,7 @@ export default function ThreadHistory() {
       .then(setThreads)
       .catch(console.error)
       .finally(() => setThreadsLoading(false));
-  }, []);
+  }, [getThreads, setThreads, setThreadsLoading]);
 
   return (
     <>
