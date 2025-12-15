@@ -178,7 +178,7 @@ export const StreamProvider: React.FC<{ children: ReactNode }> = ({
   };
 
   // Determine final values to use, prioritizing URL params then env vars, then defaults
-  const finalApiUrl = process.env.NEXT_PUBLIC_API_URL || apiUrl || envVars.apiUrl || DEFAULT_API_URL;
+  const finalApiUrl = process.env.AGENT_API_URL||process.env.NEXT_PUBLIC_API_URL || apiUrl || envVars.apiUrl || DEFAULT_API_URL;
   const finalAssistantId = process.env.NEXT_PUBLIC_ASSISTANT_ID || assistantId || envVars.assistantId || DEFAULT_ASSISTANT_ID;
 
   console.log('API Route Request - Current Environment Variables:');
