@@ -2,9 +2,9 @@ import os
 from utils.general_utils.globle_util import get_platform
 
 LOG_DIR = os.path.dirname(__file__)
-MINIO_HOST = os.getenv("MINIO_HOST") if os.getenv("MINIO_HOST") else "115.190.35.205"
+HOST_IP = os.getenv("HOST_IP") if os.getenv("HOST_IP") else "115.190.35.205"
 MINIO_PORT = os.getenv("MINIO_PORT") if os.getenv("MINIO_PORT") else "9000"
-MINIO_ENDPOINT = f"{MINIO_HOST}:{MINIO_PORT}"
+MINIO_ENDPOINT = f"{HOST_IP}:{MINIO_PORT}"
 MINIO_ACCESS_KEY = os.getenv("MINIO_ACCESS_KEY") if os.getenv("MINIO_ACCESS_KEY") else "rexrex92"
 MINIO_SECRET_KEY = os.getenv("MINIO_SECRET_KEY") if os.getenv("MINIO_SECRET_KEY") else "rexrex92"
 

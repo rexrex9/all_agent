@@ -150,8 +150,8 @@ export const StreamProvider: React.FC<{ children: ReactNode }> = ({
           const data = await response.json();
           setEnvVars({
             // Use API_URL first (runtime env var), then NEXT_PUBLIC_API_URL (build time env var)
-            apiUrl: data.API_URL || data.NEXT_PUBLIC_API_URL,
-            assistantId: data.ASSISTANT_ID || data.NEXT_PUBLIC_ASSISTANT_ID,
+            apiUrl: data.API_URL || process.env.NEXT_PUBLIC_API_URL,
+            assistantId: data.ASSISTANT_ID || process.env.NEXT_PUBLIC_ASSISTANT_ID,
           });
         }
       } catch (error) {
@@ -178,8 +178,14 @@ export const StreamProvider: React.FC<{ children: ReactNode }> = ({
   };
 
   // Determine final values to use, prioritizing URL params then env vars, then defaults
-  const finalApiUrl = apiUrl || envVars.apiUrl || DEFAULT_API_URL;
-  const finalAssistantId = assistantId || envVars.assistantId || DEFAULT_ASSISTANT_ID;
+  const finalApiUrl = process.env.NEXT_PUBLIC_API_URL || apiUrl || envVars.apiUrl || DEFAULT_API_URL;
+  const finalAssistantId = process.env.NEXT_PUBLIC_ASSISTANT_ID || assistantId || envVars.assistantId || DEFAULT_ASSISTANT_ID;
+
+  console.log('API Route Request - Current Environment Variables:');
+  console.log('API_URL:', apiUrl);
+  console.log('ASSISTANT_ID:', assistantId);
+  console.log('NEXT_PUBLIC_API_URL:', process.env.NEXT_PUBLIC_API_URL);
+
 
   // Show the form if we: don't have an API URL, or don't have an assistant ID
   if (!finalApiUrl || !finalAssistantId) {
