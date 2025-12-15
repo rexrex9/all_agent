@@ -11,9 +11,9 @@ class MinioConn:
     def create_client(self):
         """连接MINIO客户端"""
         return Minio(
-            cfg.MINIO.ENDPOINT,
-            access_key=cfg.MINIO.ACCESS_KEY,
-            secret_key=cfg.MINIO.SECRET_KEY,
+            cfg.MINIO_ENDPOINT,
+            access_key=cfg.MINIO_ACCESS_KEY,
+            secret_key=cfg.MINIO_SECRET_KEY,
             secure=False
         )
     def _init_bucket(self):
