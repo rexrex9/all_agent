@@ -40,7 +40,7 @@ export function ThreadProvider({ children }: { children: ReactNode }) {
   const [threadsLoading, setThreadsLoading] = useState(false);
 
   // Priority: URL params > environment variables
-  const finalApiUrl = urlApiUrl || process.env.NEXT_PUBLIC_API_URL;
+  const finalApiUrl = process.env.AGENT_API_URL || urlApiUrl || process.env.NEXT_PUBLIC_API_URL;
   const finalAssistantId = urlAssistantId || process.env.NEXT_PUBLIC_ASSISTANT_ID;
 
   const getThreads = useCallback(async (): Promise<Thread[]> => {
