@@ -101,7 +101,7 @@ services:
       - agent_files:/agent_files
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:8000/ok" ]
-      interval: 30s
+      interval: 60s
       timeout: 10s
       retries: 3
       start_period: 90s
