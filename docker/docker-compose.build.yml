@@ -57,9 +57,9 @@ services:
   # ppt-mcp
   ppt-mcp:
     build:
-      context: ../sub_projects/ppt-mcp  # 调整为相对于根目录的路径
+      context: ../sub_projects/ppt-mcp
       dockerfile: Dockerfile
-    image: allagent-ppt-mcp:latest  # 添加这一行
+    image: allagent-ppt-mcp:latest
     container_name: allagent-ppt-mcp
     command: python server.py
     volumes:
@@ -74,10 +74,10 @@ services:
 
   allagent:
     build:
-      context: ..              # 调整为项目根目录
-      dockerfile: docker/Dockerfile   # 调整为相对于根目录的dockerfile路径
+      context: ..
+      dockerfile: docker/Dockerfile
     container_name: allagent-server
-    image: allagent-server:latest  # 添加这一行
+    image: allagent-server:latest
     ports:
       - "${AGENT_SERVER_PORT:-8000}:8000"
     command: langgraph up --port 8000
@@ -113,7 +113,7 @@ services:
     build:
       context: ../sub_projects/agent-chat-ui
       dockerfile: Dockerfile
-    image: allagent-ui:latest  # 添加这一行
+    image: allagent-ui:latest
     container_name: allagent-frontend
     ports:
       - "${AGENT_UI_PORT:-3000}:3000"
