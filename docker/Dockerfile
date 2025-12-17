@@ -2,7 +2,14 @@ FROM langchain/langgraph-api:3.11
 
 
 # 安装 curl
-RUN apt-get update && apt-get install -y curl && apt-get clean
+RUN apt-get update && apt-get install -y \
+    curl \
+    pandoc \
+    texlive-xetex \
+    texlive-fonts-recommended \
+    texlive-lang-chinese \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 # -- Installing local requirements --
 ADD ../requirements.txt /deps/outer-all_agent/src/requirements.txt
