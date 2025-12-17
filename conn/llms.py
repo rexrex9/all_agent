@@ -1,12 +1,13 @@
 from langchain_openai import ChatOpenAI
 from base import configs as gc
+
 def get_llm():
     # Qwen/Qwen3-30B-A3B-Instruct-2507
     # Qwen/Qwen3-Next-80B-A3B-Instruct
     # Qwen/Qwen3-Coder-30B-A3B-Instruct
     # Qwen/Qwen3-Omni-30B-A3B-Instruct
     llm = ChatOpenAI(
-            model="Qwen/Qwen3-Coder-30B-A3B-Instruct",
+            model=gc.BASE_LLM,
             base_url=gc.BASE_URL,
             temperature=0.1,
         )
