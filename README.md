@@ -198,7 +198,7 @@ A: 停止：`docker compose down`，重启：`docker compose restart`
 
 ## 联系我们
 
-- 💬 问题反馈：[提交Issue]([rexrex9/all_agent: 通用agent项目](https://github.com/rexrex9/all_agent/issues))
+- 💬 问题反馈：[提交Issue](https://github.com/rexrex9/all_agent/issues)
 - 📺 B站：[骰子AI](https://space.bilibili.com/497998686)
 
 
