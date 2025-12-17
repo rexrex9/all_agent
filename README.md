@@ -3,7 +3,7 @@
 ![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)
 ![Python](https://img.shields.io/badge/python-3.11+-blue.svg)
 ![Docker](https://img.shields.io/badge/docker-required-blue.svg)
-![Stars](https://img.shields.io/github/stars/your-username/your-repo?style=social)
+![Stars](https://img.shields.io/github/stars/rexrex9/all_agent?style=social)
 
 **中文名：真-超级通用智能体**
 
