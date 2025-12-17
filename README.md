@@ -82,7 +82,7 @@
 cd docker
 cp .env.example .env
 ```
-2. 填写.env文件中其中这几项(.env.example(英文版)或.env.example.zh(中文版)文件有更详细说明)
+2. 填写.env文件中其中这几项([.env.example(英文版)](docker/.env.example)或[.env.example.zh(中文版)](docker/.env.example.zh)文件有更详细说明)
 
    - OPENAI_API_KEY：SiliconFlow API 密钥 (必需)，用于访问硅基流动的AI模型服务，有免费额度, 获取地址: https://cloud.siliconflow.cn/i/FVis58aF
 
