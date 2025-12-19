@@ -23,6 +23,7 @@ RUN apt-get update && \
     texlive-xetex \
     texlive-fonts-recommended \
     texlive-lang-chinese \
+    lmodern \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
