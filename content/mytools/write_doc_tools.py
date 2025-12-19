@@ -2,6 +2,7 @@
 from langchain.tools import tool
 import pypandoc
 from content.utils import runtime_util as rt
+from utils.general_utils.globle_util import get_platform
 # tool
 def convert_file(filepath, output_format):
     """
@@ -18,6 +19,12 @@ def convert_file(filepath, output_format):
     if output_format.lower() == 'pdf':
         if input_format=='txt':
             input_format='md' # 把txt当作md
+
+        if get_platform() == 0:
+            pdf_engine = '--pdf-engine=wkhtmltopdf'
+        else:
+            pdf_engine = '--pdf-engine=weasyprint'
+        print(pdf_engine)
         pypandoc.convert_file(
             filepath,
             output_format,
@@ -29,8 +36,9 @@ def convert_file(filepath, output_format):
             #     '--variable', 'CJKmainfont=SimSun',  # 添加 CJK 字体
             #     '--resource-path', rt.get_root_thread_dir(),  # 设置资源路径
             #
+
             extra_args=[
-                '--pdf-engine=wkhtmltopdf',
+                pdf_engine,
                 '--pdf-engine-opt=--enable-local-file-access',  # 允许访问本地文件
                 '--pdf-engine-opt=--encoding',
                 '--pdf-engine-opt=utf-8',  # 设置UTF-8编码
