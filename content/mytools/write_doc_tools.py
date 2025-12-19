@@ -36,8 +36,8 @@ def convert_file(filepath, output_format):
             format=input_format,
             extra_args=[
                 '--pdf-engine=xelatex',
-                '-V', 'mainfont=SimSun',  # 使用文泉驿微米黑
-                '--variable', 'CJKmainfont=SimSun',  # CJK 字体
+                '-V', mainfont,  # 使用文泉驿微米黑
+                '--variable', cjkmainfont,  # CJK 字体
                 '--resource-path', rt.get_root_thread_dir(),  # 设置资源路径
             ],
             # extra_args=[
