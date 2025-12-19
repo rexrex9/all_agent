@@ -21,29 +21,32 @@ def convert_file(filepath, output_format):
             input_format='md' # 把txt当作md
 
         if get_platform() == 0:
-            pdf_engine = '--pdf-engine=wkhtmltopdf'
+            #pdf_engine = '--pdf-engine=wkhtmltopdf'
+            mainfont = 'mainfont=SimSun'
+            cjkmainfont = 'CJKmainfont=SimSun'
         else:
-            pdf_engine = '--pdf-engine=weasyprint'
-        print(pdf_engine)
+            #pdf_engine = '--pdf-engine=weasyprint'
+            mainfont = 'mainfont=WenQuanYi Micro Hei'
+            cjkmainfont = 'CJKmainfont=WenQuanYi Micro Hei'
+        # print(pdf_engine)
         pypandoc.convert_file(
             filepath,
             output_format,
             outputfile=output_file,
             format=input_format,
-            # extra_args=[
-            #     '--pdf-engine=xelatex',
-            #     '-V', 'mainfont=SimSun',  # 添加中文字体
-            #     '--variable', 'CJKmainfont=SimSun',  # 添加 CJK 字体
-            #     '--resource-path', rt.get_root_thread_dir(),  # 设置资源路径
-            #
-
             extra_args=[
-                pdf_engine,
-                '--pdf-engine-opt=--enable-local-file-access',  # 允许访问本地文件
-                '--pdf-engine-opt=--encoding',
-                '--pdf-engine-opt=utf-8',  # 设置UTF-8编码
-                '--resource-path', rt.get_root_thread_dir(),
-            ]
+                '--pdf-engine=xelatex',
+                '-V', 'mainfont=SimSun',  # 使用文泉驿微米黑
+                '--variable', 'CJKmainfont=SimSun',  # CJK 字体
+                '--resource-path', rt.get_root_thread_dir(),  # 设置资源路径
+            ],
+            # extra_args=[
+            #     pdf_engine,
+            #     '--pdf-engine-opt=--enable-local-file-access',  # 允许访问本地文件
+            #     '--pdf-engine-opt=--encoding',
+            #     '--pdf-engine-opt=utf-8',  # 设置UTF-8编码
+            #     '--resource-path', rt.get_root_thread_dir(),
+            # ]
         )
     else:
         pypandoc.convert_file(
