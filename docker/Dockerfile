@@ -6,11 +6,10 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN sed -i 's/archive.ubuntu.com/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list || \
     sed -i 's/deb.debian.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list || true
 
-# 安装 pandoc、wkhtmltopdf 和中文字体
+# 安装基础包和中文字体
 RUN apt-get update && apt-get install -y \
     curl \
     pandoc \
-    wkhtmltopdf \
     fonts-wqy-microhei \
     fonts-wqy-zenhei \
     fontconfig \

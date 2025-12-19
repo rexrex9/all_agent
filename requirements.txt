@@ -13,3 +13,4 @@ langgraph-cli[inmem]
 markitdown[all]
 a2a-sdk[all]
 psycopg
+weasyprint
