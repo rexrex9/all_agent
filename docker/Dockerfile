@@ -1,10 +1,25 @@
 FROM langchain/langgraph-api:3.11
 
 
-# 安装 curl
-RUN apt-get update && apt-get install -y \
+# 修复apt源并安装基础工具
+RUN apt-get clean && \
+    rm -rf /var/lib/apt/lists/* && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends \
     curl \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# 安装 pandoc（单独安装以便定位问题）
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
     pandoc \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# 安装 LaTeX 相关依赖
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
     texlive-xetex \
     texlive-fonts-recommended \
     texlive-lang-chinese \
