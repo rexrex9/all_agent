@@ -7,12 +7,23 @@ RUN sed -i 's/archive.ubuntu.com/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/source
     sed -i 's/deb.debian.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list || true
 
 # 安装基础包和中文字体
+# 安装 WeasyPrint 所需的完整依赖
 RUN apt-get update && apt-get install -y \
     curl \
     pandoc \
     fonts-wqy-microhei \
     fonts-wqy-zenhei \
     fontconfig \
+    libpango-1.0-0 \
+    libpangocairo-1.0-0 \
+    libpangoft2-1.0-0 \
+    libgdk-pixbuf2.0-0 \
+    libcairo2 \
+    libffi-dev \
+    shared-mime-info \
+    libglib2.0-0 \
+    libgobject-2.0-0 \
+    && fc-cache -fv \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
