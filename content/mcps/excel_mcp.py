@@ -8,7 +8,11 @@ async def get_tools():
         {
             "excel": {
                 "command": "uvx",
-                "args": ["excel-mcp-server", "stdio"],
+                "args": [
+                    "--index-url", "https://pypi.tuna.tsinghua.edu.cn/simple",
+                    "excel-mcp-server",
+                    "stdio"
+                ],
                 "transport": "stdio",
               }
         },
