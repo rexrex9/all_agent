@@ -19,7 +19,12 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-RUN apt-get install -y texlive-lang-chinese
+# 第二层：安装中文支持（需要重新 update）
+RUN apt-get update && apt-get install -y \
+    texlive-lang-chinese \
+    fonts-noto-cjk \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 # -- Installing local requirements --
 ADD ../requirements.txt /deps/outer-all_agent/src/requirements.txt
