@@ -19,6 +19,7 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+RUN apt-get install -y texlive-lang-chinese
 
 # -- Installing local requirements --
 ADD ../requirements.txt /deps/outer-all_agent/src/requirements.txt

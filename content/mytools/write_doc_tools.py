@@ -26,8 +26,8 @@ def convert_file(filepath, output_format):
             cjkmainfont = 'CJKmainfont=SimSun'
         else:
             #pdf_engine = '--pdf-engine=weasyprint'
-            mainfont = 'mainfont=WenQuanYi Micro Hei'
-            cjkmainfont = 'CJKmainfont=WenQuanYi Micro Hei'
+            mainfont = 'mainfont=Noto Sans CJK SC'
+            cjkmainfont = 'CJKmainfont=Noto Sans CJK SC'
         # print(pdf_engine)
         pypandoc.convert_file(
             filepath,
