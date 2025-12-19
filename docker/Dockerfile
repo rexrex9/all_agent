@@ -13,31 +13,8 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
     
-# 使用清华大学镜像源加速（如果在中国）
-RUN sed -i 's/archive.ubuntu.com/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list || \
-    sed -i 's/deb.debian.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list || true
 
-# LaTeX 安装
-RUN apt-get update && apt-get install -y \
-    texlive-xetex \
-    texlive-latex-base \
-    # texlive-lang-chinese \
-    lmodern \
-    fonts-wqy-microhei \
-    fonts-liberation \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
 
-# # 安装 LaTeX 相关依赖
-# RUN apt-get update && \
-#     apt-get install -y --no-install-recommends \
-#     texlive-xetex \
-#     texlive-fonts-recommended \
-#     texlive-lang-chinese \
-#     lmodern \
-#     fonts-liberation \
-#     && apt-get clean \
-#     && rm -rf /var/lib/apt/lists/*
 
 # -- Installing local requirements --
 ADD ../requirements.txt /deps/outer-all_agent/src/requirements.txt

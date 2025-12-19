@@ -23,11 +23,18 @@ def convert_file(filepath, output_format):
             output_format,
             outputfile=output_file,
             format=input_format,
+            # extra_args=[
+            #     '--pdf-engine=xelatex',
+            #     '-V', 'mainfont=SimSun',  # 添加中文字体
+            #     '--variable', 'CJKmainfont=SimSun',  # 添加 CJK 字体
+            #     '--resource-path', rt.get_root_thread_dir(),  # 设置资源路径
+            #
             extra_args=[
-                '--pdf-engine=xelatex',
-                '-V', 'mainfont=SimSun',  # 添加中文字体
-                '--variable', 'CJKmainfont=SimSun',  # 添加 CJK 字体
-                '--resource-path', rt.get_root_thread_dir(),  # 设置资源路径
+                '--pdf-engine=wkhtmltopdf',
+                '--pdf-engine-opt=--enable-local-file-access',  # 允许访问本地文件
+                '--pdf-engine-opt=--encoding',
+                '--pdf-engine-opt=utf-8',  # 设置UTF-8编码
+                '--resource-path', rt.get_root_thread_dir(),
             ]
         )
     else:
@@ -43,4 +50,4 @@ def convert_file(filepath, output_format):
     return output_file
 
 if __name__ == '__main__':
-    convert_file(r'D:\workspace\pythonworkspace\projects\all_agent\content\mytools\a.txt','pdf')
+    convert_file(r'D:\workspace\pythonworkspace\projects\all_agent\content\mytools\a.md','pdf')
