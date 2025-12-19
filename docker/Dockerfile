@@ -12,6 +12,10 @@ RUN apt-get update && apt-get install -y \
     pandoc \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
+    
+# 使用清华大学镜像源加速（如果在中国）
+RUN sed -i 's/archive.ubuntu.com/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list || \
+    sed -i 's/deb.debian.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list || true
 
 # LaTeX 安装
 RUN apt-get update && apt-get install -y \
