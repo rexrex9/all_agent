@@ -17,7 +17,7 @@ RUN apt-get update && apt-get install -y \
 RUN apt-get update && apt-get install -y \
     texlive-xetex \
     texlive-latex-base \
-    texlive-lang-chinese \
+    # texlive-lang-chinese \
     lmodern \
     fonts-wqy-microhei \
     fonts-liberation \
