@@ -24,6 +24,7 @@ RUN apt-get update && \
     texlive-fonts-recommended \
     texlive-lang-chinese \
     lmodern \
+    fonts-liberation \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
