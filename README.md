@@ -208,7 +208,6 @@ A: 停止：`docker compose down`，重启：`docker compose restart`
 本项目在开发过程中参考和集成了以下优秀开源项目，特此致谢：
 
 - **Agent Chat UI** - [langchain-ai/agent-chat-ui: 🦜💬 Web app for interacting with any LangGraph agent (PY & TS) via a chat interface.](https://github.com/langchain-ai/agent-chat-ui)
-
 - **pptx-mcp** - [samos123/pptx-mcp: Create Slides with a simple MCP server using Python PPTX library](https://github.com/samos123/pptx-mcp)
 - **excel-mcp-server** - [haris-musa/excel-mcp-server: A Model Context Protocol server for Excel file manipulation](https://github.com/haris-musa/excel-mcp-server)
 - **martitdown** - [microsoft/markitdown: Python tool for converting files and office documents to Markdown.](https://github.com/microsoft/markitdown)
