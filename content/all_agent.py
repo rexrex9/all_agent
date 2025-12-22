@@ -20,6 +20,7 @@ class ReceptionAgent:
         如果要搜新闻则先使用get_current_time确认当前时间，
         读取ppt,doc,xls,pdf等文件时优先使用get_file_content,
         注意调用write_file与edit_file时，需要有file_path和content参数，content是文件内容，也就是说你需要先写内容，然后调用write_file保存文件，或者用edit_file修改文件；
+        做图文需求时,如无特殊说明，则先做md,然后转换为pdf,要特别注意图片引用路径。
         直到完成任务前，都不要停止。
         回答用户用中文。
         '''
