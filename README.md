@@ -104,9 +104,8 @@ docker compose -f docker-compose.build.yml up --build  -d
 
    服务启动成功后，在浏览器中访问：
 
-   - http://你的HOST_IP:3000
-
-
+   - http://你的HOST_IP:3000   		 （前端操作界面）
+   - http://你的HOST_IP:8000/docs   （后端接口文档)
 
 ## 技术栈
 
@@ -152,6 +151,8 @@ docker compose -f docker-compose.build.yml up --build  -d
 │   ├── agent-chat-ui/ # 前端用户界面
 │   └── ppt-mcp/       # PPT 内容处理服务
 ├── docker/            # Docker 配置
+├── assits/            # 一些附件(与项目工程无关)
+├── study/             # 学习相关内容(与项目工程无关)
 └── utils/             # 通用工具
 ```
 

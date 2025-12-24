@@ -6,6 +6,7 @@ from utils.general_utils.loggers import logger
 
 @wrap_model_call
 async def wait_rate_limit(request: ModelRequest, handler) -> ModelResponse:
+    #return await handler(request)
     for i in range(gc.WAIT_RATE_LIMIT_RETRY):
         try:
             return await handler(request)

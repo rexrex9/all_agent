@@ -1,5 +1,7 @@
 import os
 from utils.general_utils.globle_util import get_platform
+from dotenv import load_dotenv
+load_dotenv()  # 默认加载当前目录下的 .env 文件
 
 LOG_DIR = os.path.dirname(__file__)
 HOST_IP = os.getenv("HOST_IP") if os.getenv("HOST_IP") else "115.190.35.205"

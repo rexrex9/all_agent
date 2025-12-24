@@ -43,3 +43,7 @@ class MinioConn:
         return presigned_url
 
 
+if __name__ == '__main__':
+    mc = MinioConn()
+    #mc.upload_obj('a.txt',r'D:\workspace\pythonworkspace\projects\all_agent\content\mytools\a.txt')
+    #print(mc.gen_presigned_url('a.txt'))
