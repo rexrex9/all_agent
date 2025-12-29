@@ -30,9 +30,14 @@
 
 ### 示例视频
 
-（视频链接待补充）
+1. [NLP交互式教程网站示例_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV1h8vsBkEZZ?spm_id_from=333.788.videopod.episodes&vd_source=bc94e8f868f066fb821a0de022a1b052)
+   - 对应结果: [NLP交互式教程网站示例.zip](assets/examples/NLP交互式教程网站示例.zip)
 
+2. [联网搜索与制作excel示例_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV1h8vsBkEZZ?spm_id_from=333.788.videopod.episodes&vd_source=bc94e8f868f066fb821a0de022a1b052&p=2)
+   - 对应结果: [联网搜索与制作excel示例.zip](assets/examples/联网搜索与制作excel示例.zip)
 
+3. [图文绘本制作示例_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV1h8vsBkEZZ?spm_id_from=333.788.videopod.episodes&vd_source=bc94e8f868f066fb821a0de022a1b052&p=3)
+   - 对应结果: [图文绘本制作示例.zip](assets/examples/图文绘本制作示例.zip)
 
 ## 主要功能特性
 
