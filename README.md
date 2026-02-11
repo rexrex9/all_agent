@@ -1,15 +1,12 @@
-# All Agent - 通用智能代理系统
+# 传智星通用智能体平台
 
 ![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)
 ![Python](https://img.shields.io/badge/python-3.11+-blue.svg)
 ![Docker](https://img.shields.io/badge/docker-required-blue.svg)
 ![Stars](https://img.shields.io/github/stars/rexrex9/all_agent?style=social)
 
-**中文名：真-超级通用智能体**
-
-![img](assets/main.png)
-
-真-超级通用智能体是一个功能强大、开箱即用的通用智能代理系统，基于最新的AI技术栈构建。
+![main](assets/main2.png)
+传智星通用智能体通用智能体是一个功能强大、开箱即用的通用智能代理系统，基于最新的AI技术栈构建。
 
 
 

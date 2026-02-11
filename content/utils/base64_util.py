@@ -1,17 +1,33 @@
 import base64
+import mimetypes
 import os
+def image_to_data_url(file_path):
+    """生成完整的data URL（包含MIME类型）"""
+    mime_type, _ = mimetypes.guess_type(file_path)
+    if mime_type is None:
+        mime_type = 'image/jpeg'  # 默认类型
+    with open(file_path, 'rb') as image_file:
+        base64_data = base64.b64encode(image_file.read()).decode('utf-8')
+    return f"data:{mime_type};base64,{base64_data}"
 
 def save_base64_file_from_content_block(content_block,save_dir):
+    """
+    从 content_block 中提取 base64 数据并保存为文件
+    Args:
+        content_block: 包含 base64 数据的字典，从Agent Chat UI前端传来的数据
+        save_dir: 保存目录
+
+    Returns:
+        Dict: 包含文件信息的字典
+    """
     return save_base64_file(
         base64_data=content_block["data"],
-        mime_type=content_block["mimeType"],
         filename=content_block["metadata"]["filename"],
         save_dir=save_dir
     )
 
 def save_base64_file(
         base64_data: str,
-        mime_type: str,
         filename: str,
         save_dir: str
 ):
@@ -20,7 +36,6 @@ def save_base64_file(
 
     Args:
         base64_data: base64 编码的字符串
-        mime_type: 文件类型，如 'image/jpeg', 'application/pdf'
         filename: 原始文件名
         save_dir: 保存目录
 
@@ -40,9 +55,10 @@ def save_base64_file(
         "success": True,
         "file_path": str(file_path),
         "filename": filename,
-        "mime_type": mime_type,
-        "size": len(file_data)
     }
+
+
+
 
 
 
@@ -53,7 +69,6 @@ if __name__ == "__main__":
 
     result = save_base64_file(
         base64_data=content_block["data"],
-        mime_type=content_block["mimeType"],
         filename=content_block["metadata"]["filename"],
         save_dir=r'D://agent_files'
     )

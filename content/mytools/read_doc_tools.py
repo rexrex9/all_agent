@@ -1,5 +1,5 @@
+# https://github.com/microsoft/markitdown
 from utils.doc_utils import markitdown_util
-from utils.general_utils.loggers import logger
 from langchain.tools import tool
 
 @ tool

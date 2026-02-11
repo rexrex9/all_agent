@@ -18,3 +18,6 @@ async def get_tools():
         },
     )
     return await client.get_tools()
+
+if __name__ == '__main__':
+    print(get_tools)

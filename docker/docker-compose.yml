@@ -56,7 +56,7 @@ services:
 
   # ppt-mcp
   ppt-mcp:
-    image: rexrex9/touzi:allagent-ppt-mcp
+    image: rexrex9/allagent-ppt-mcp:v1.0
     container_name: allagent-ppt-mcp
     command: python server.py
     volumes:
@@ -71,7 +71,7 @@ services:
 
   allagent:
     container_name: allagent-server
-    image: rexrex9/touzi:allagent-server
+    image: rexrex9/allagent-server:v1.0
     ports:
       - "${AGENT_SERVER_PORT:-8000}:8000"
     command: langgraph up --port 8000
@@ -104,7 +104,7 @@ services:
 
   # 前端服务 - Agent Chat UI
   agent-chat-ui:
-    image: rexrex9/touzi:allagent-ui
+    image: rexrex9/allagent-ui:v1.0
     container_name: allagent-frontend
     ports:
       - "${AGENT_UI_PORT:-3000}:3000"

@@ -1,9 +1,5 @@
-import hashlib
 import uuid
 import sys
-# 生成hash值
-def gen_hash(text):
-    return hashlib.md5(text.encode('utf-8')).hexdigest()
 
 # 生成uuid
 def get_uuid():
@@ -21,8 +17,5 @@ def get_platform():
         #print("这是 macOS 系统")
         return 2
 
-
-
 if __name__ == '__main__':
-    print(len(gen_hash("123")))
-    print(uuid.uuid4())
+    print(get_platform())

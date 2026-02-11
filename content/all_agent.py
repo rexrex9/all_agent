@@ -8,12 +8,10 @@ from content.mytools import (gen_image,
 from content.middles import (wait_rate_limit,
                              file_manager_middle)
 from content.others import mybackend
-from utils.general_utils.loggers import logger
-import asyncio
 from base import configs as gc
 
 
-class ReceptionAgent:
+class AllAgent:
     def __init__(self):
         prompt = f'''
         你是一个通用智能体，
@@ -32,6 +30,11 @@ class ReceptionAgent:
             prompt+='''
             做ppt的需求则优先使用ppt-agent;
             '''
+        if gc.USE_EXCEL or gc.USE_PPT:
+            prompt += '''
+              交给subagent后需关注其返回结果
+              '''
+
 
         self.agent = create_deep_agent(
             model=get_llm(), # 传一个llm
@@ -71,21 +74,5 @@ class ReceptionAgent:
             wait_rate_limit.wait_rate_limit,
         ]
 
-    def steam_try(self,user_input,thread_id):
-        messages = [{"role": "user", "content": user_input}]
-        return self.agent.astream({"messages": messages},config={"configurable":{"thread_id":thread_id}})
-
 if __name__ == '__main__':
-    from utils.general_utils.steam_util import astream_print_log
-
-    agent = ReceptionAgent()
-
-    p = '''
-    做一个a.txt,随便写点什么
-    '''
-    #p = r'D:\agent_file_system'
-    asyncio.run(astream_print_log(agent.steam_try(p,"ssss")))
-    #from langchain.messages import HumanMessage
-    #HumanMessage(content=p)
-    #agent.agent.stream({"messages": [{"role": "user", "content": p}]},)
-
+    pass
