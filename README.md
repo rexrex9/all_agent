@@ -189,13 +189,15 @@ A: 停止：`docker compose down`，重启：`docker compose restart`
 
 ## 未来计划
 
-- 制作项目教程
-
 - 增加音视频能力
 
 - 支持更灵活的配置模型
 
 - 优化用户界面体验
+
+- 增加用户可自行接入MCP的功能
+
+- 增加用户可自行接入Agent Skills的功能
 
 
 ## 联系我们

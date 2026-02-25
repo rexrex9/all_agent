@@ -1,0 +1,24 @@
+# 指定基础镜像
+# FROM 指令用于初始化一个新的构建阶段，并为后续指令设置基础镜像。
+# 这里我们使用官方的 Python:3.12 镜像。标签 "3.12" 会自动拉取 Python 3.12 系列的最新稳定版
+FROM python:3.12
+
+# 设置工作目录
+# WORKDIR 指令为 Dockerfile 中所有后续的指令（如 RUN, CMD, COPY）设置工作目录。
+# 如果目录不存在，Docker 会自动创建它。
+# 将工作目录设置为 /usr/src/app 是一个常见的最佳实践，它将应用程序代码与系统文件隔离开。
+WORKDIR /usr/src/app
+
+# 复制文件到服务器
+# . 代表所有文件，前一个是本地(也可制定单个文件或文件夹)，后一个是服务器
+COPY . .
+
+# 安装依赖
+# RUN 指令将在当前镜像之上执行任何命令，并提交结果，生成一个新的镜像层。
+RUN pip install -r requirements.txt
+
+# 设置容器启动时执行的默认命令
+# CMD 指令为容器提供默认的执行命令。一个 Dockerfile 中只能有一个 CMD，如果有多个，只有最后一个会生效。
+# RUN与CMD的区别是，RUN是docker build时执行的，CMD是docker run时执行的
+# CMD ["python","hello.py"]，相当于在容器终端执行了 python hello.py
+CMD [ "python", "hello.py" ]
