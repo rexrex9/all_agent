@@ -7,7 +7,7 @@ client = MultiServerMCPClient(
     {
         "demo": {
             "command": "python",
-            "args": [r"01_stdio_sever.py"],
+            "args": [r"03_stdio_sever.py"],
             "transport": "stdio",
         },
     }

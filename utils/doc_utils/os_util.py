@@ -127,6 +127,6 @@ def get_directory_tree(root_dir='.'):
 
 
 if __name__ == "__main__":
-    folder_path = r'..\..\utils'
-    a = get_folder_file_update_time_max(folder_path)
+    folder_path = r'../'
+    a = get_directory_tree(folder_path)
     print(a)
