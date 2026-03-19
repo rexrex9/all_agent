@@ -1,11 +1,21 @@
 from deepagents import create_deep_agent
 from deepagents.backends.filesystem import FilesystemBackend
-from conn import llms
 from tool import execute
+from langchain_openai import ChatOpenAI
+from dotenv import load_dotenv
+load_dotenv()  # 默认加载当前目录下的 .env 文件
+def get_llm():
+    llm = ChatOpenAI(
+            model = "deepseek-ai/DeepSeek-V3.2",
+            base_url="https://api.siliconflow.cn/v1",
+            temperature=0.1,
+        )
+    return llm
+
 agent = create_deep_agent(
     backend=FilesystemBackend(root_dir="/agent_files"),
     skills=["skills"],
-    model=llms.get_llm(),
+    model=get_llm(),
     tools= [execute],
     system_prompt="""
     注意:
