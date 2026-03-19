@@ -31,7 +31,7 @@ def execute( command):
 
 
 agent = create_deep_agent(
-    backend=FilesystemBackend(root_dir="/agent_files"),
+    backend=FilesystemBackend(root_dir="/agent_files",virtual_mode= True),
     skills=["skills"],
     model=get_llm(),
     tools= [execute],
