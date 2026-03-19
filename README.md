@@ -5,12 +5,17 @@
 ![Docker](https://img.shields.io/badge/docker-required-blue.svg)
 ![Stars](https://img.shields.io/github/stars/rexrex9/all_agent?style=social)
 
+
+
 ![main](assets/main2.png)
+
+
+
 传智星通用智能体通用智能体是一个功能强大、开箱即用的通用智能代理系统，基于最新的AI技术栈构建。
 
 
 
-## 项目说明
+### 项目说明
 
 本项目基于 **Langchain 1.0** 框架开发，旨在帮助开发者快速理解和搭建通用Agent平台。项目完全开源，既可用于学习研究，也可直接拿去商用。
 
@@ -160,7 +165,7 @@ docker compose -f docker-compose.build.yml up --build  -d
 
 
 
-## FAQ
+## FQA
 
 **Q: 为什么必须填写HOST_IP，不能用localhost？**
 A: 因为前后端在不同的Docker容器中运行，使用localhost会导致前端无法正确访问后端API。
