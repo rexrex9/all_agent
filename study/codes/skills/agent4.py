@@ -1,6 +1,5 @@
 from deepagents import create_deep_agent
 from deepagents.backends.filesystem import FilesystemBackend
-from tool import execute
 from langchain_openai import ChatOpenAI
 from dotenv import load_dotenv
 load_dotenv()  # 默认加载当前目录下的 .env 文件
@@ -11,6 +10,25 @@ def get_llm():
             temperature=0.1,
         )
     return llm
+
+import requests
+from langchain.tools import tool
+import subprocess
+@ tool
+def fetch_url( url):
+    """
+    获取url内容
+    """
+    return requests.get(url).text
+
+@ tool
+def execute( command):
+    """
+    执行命令
+    """
+    return subprocess.run(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,text= True).stdout
+
+
 
 agent = create_deep_agent(
     backend=FilesystemBackend(root_dir="/agent_files"),
