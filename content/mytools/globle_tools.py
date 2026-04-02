@@ -1,6 +1,7 @@
 import datetime
 import subprocess
 from langchain.tools import tool
+
 @ tool
 def get_current_time():
     """
@@ -25,4 +26,4 @@ def run_command(command: str):
     return s
 
 def get_tools():
-    return [get_current_time, run_command]
+    return [get_current_time]#, run_command]

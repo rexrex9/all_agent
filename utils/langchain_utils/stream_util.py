@@ -31,3 +31,22 @@ def stream_both(agent, input):
     generator = agent.stream(input={"messages": {'role': 'user', 'content': input}},stream_mode=["messages", "updates"])
     for chunk in stream_output(generator):
         print(chunk, end="", flush=True)
+
+async def astream_both(agent, input):
+    async def stream_output(generator):
+        async for r in generator:  # 使用 async for
+            if r[0] == "updates":
+                logger.info(r[1])
+            if r[0] == "messages":
+                if type(r[1][0]) != AIMessageChunk:
+                    continue
+                c = r[1][0].content
+                if c:
+                    yield c
+
+    generator = agent.astream(
+        input={"messages": {'role': 'user', 'content': input}},
+        stream_mode=["messages", "updates"]
+    )
+    async for chunk in stream_output(generator):  # 使用 async for
+        print(chunk, end="", flush=True)

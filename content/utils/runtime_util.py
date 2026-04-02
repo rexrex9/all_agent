@@ -137,14 +137,6 @@ def get_out_path(file_path):
 
 if __name__ == '__main__':
     root_dir = r'D:\code\langchain-demo\datas\filepaths\\'
-    file_path = r'\code\langchain-demo\datas/filepaths.py'
+    file_path = r'python \code\langchain-demo\datas/filepaths.py'
+    print(change_file_path(file_path))
     print(get_out_path(file_path))
-    root_dir = os.path.normpath(root_dir)
-    file_path = os.path.normpath(file_path)
-    print(root_dir)
-    print(file_path)
-    a = os.path.relpath(file_path, '/')
-    print(a)
-    a = 'aaaa'
-    b = 'asddsaaaa'
-    print(a in  b)

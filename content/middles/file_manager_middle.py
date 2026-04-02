@@ -2,7 +2,7 @@ import os
 import asyncio
 import time
 from content.utils import runtime_util as rt
-from base.configs import USER_UPLOAD_PATH
+from base.configs import USER_UPLOAD_PATH,CONVERSATION_HISTORY_PATH
 from langchain.agents.middleware import AgentState, AgentMiddleware
 from content.utils import base64_util as bu
 from utils.doc_utils import os_util as ou
@@ -58,7 +58,7 @@ class FileMiddleware(AgentMiddleware[CustomState]):
         bool: 如果存在比work_start_time更新的文件返回True，否则False
         """
         # 异步执行文件时间检查，避免阻塞事件循环
-        max_time = await asyncio.to_thread(ou.get_folder_file_update_time_max, folder_path)
+        max_time = await asyncio.to_thread(ou.get_folder_file_update_time_max, folder_path, [USER_UPLOAD_PATH,'skill-creator',CONVERSATION_HISTORY_PATH])
         return max_time > work_start_time  # 比较最新文件时间与参考时间
 
     async def abefore_model(self, state, runtime):

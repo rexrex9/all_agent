@@ -1,17 +1,19 @@
 import os
-
-
-def get_folder_file_update_time(folder_path):
+def get_folder_file_update_time(folder_path, ignore_folders=None):
     """
     获取文件夹下所有文件的最后修改时间
 
     参数:
     folder_path: 要遍历的文件夹路径
+    ignore_folders: 要忽略的文件夹名称列表，例如 ['node_modules', '.git', '__pycache__']
 
     返回:
     list: 包含所有文件最后修改时间戳的列表
           时间戳是从纪元（1970年1月1日00:00:00 UTC）开始的秒数
     """
+    if ignore_folders is None: # 新增
+        ignore_folders = []
+
     file_update_time_list = []  # 初始化空列表，用于存储所有文件的修改时间
 
     # 使用os.walk递归遍历文件夹及其所有子文件夹
@@ -19,13 +21,14 @@ def get_folder_file_update_time(folder_path):
     # dirs: 当前目录下的子目录列表
     # files: 当前目录下的文件列表
     for root, dirs, files in os.walk(folder_path):
+        # 过滤掉需要忽略的文件夹（直接修改 dirs 列表，os.walk 就不会进入这些目录）
+        dirs[:] = [d for d in dirs if d not in ignore_folders]
         # 遍历当前目录下的所有文件
         for file in files:
             # 构建文件的完整路径（目录路径 + 文件名）
             file_path = os.path.join(root, file)
 
             # 获取文件的最后修改时间（返回浮点数时间戳）
-            # 时间戳表示从纪元（1970年1月1日00:00:00 UTC）开始的秒数
             file_update_time = os.path.getmtime(file_path)
 
             # 将获取到的时间戳添加到列表中
@@ -34,8 +37,7 @@ def get_folder_file_update_time(folder_path):
     # 返回包含所有文件修改时间的列表
     return file_update_time_list
 
-
-def get_folder_file_update_time_max(folder_path):
+def get_folder_file_update_time_max(folder_path,ignore_folders=None):
     """
     获取文件夹下所有文件中最后修改时间的最大值（最新的修改时间）
 
@@ -47,7 +49,7 @@ def get_folder_file_update_time_max(folder_path):
            如果文件夹为空或没有文件，返回0
     """
     # 调用get_folder_file_update_time函数获取所有文件的修改时间
-    file_update_time_list = get_folder_file_update_time(folder_path)
+    file_update_time_list = get_folder_file_update_time(folder_path,ignore_folders)
 
     # 检查列表是否为空（文件夹为空或没有文件）
     if len(file_update_time_list) == 0:
@@ -127,6 +129,6 @@ def get_directory_tree(root_dir='.'):
 
 
 if __name__ == "__main__":
-    folder_path = r'../'
-    a = get_directory_tree(folder_path)
+    folder_path = r'D:\agent_files\2f4ee2e8-d87c-491a-a8b4-9e6ceb41814d'
+    a = get_folder_file_update_time(folder_path,ignore_folders=['user_uploads','skills','conversation_history'])
     print(a)

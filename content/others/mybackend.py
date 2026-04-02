@@ -1,9 +1,9 @@
 from deepagents.backends import FilesystemBackend, BackendProtocol
-from base.configs import ROOT_PATH_AGENT
+from base.configs import ROOT_PATH_AGENT,SKILL_DIR_PATH
 from content.utils import runtime_util as rt
 import os
 from typing import Optional
-
+import shutil
 
 class LazyFilesystemBackend(BackendProtocol):
     """
@@ -15,7 +15,7 @@ class LazyFilesystemBackend(BackendProtocol):
     - 避免初始化时因创建目录等os操作线程阻塞报错
     """
 
-    def __init__(self, runtime):
+    def __init__(self, runtime=None):
         """
         初始化懒加载后端
 
@@ -26,6 +26,7 @@ class LazyFilesystemBackend(BackendProtocol):
         self._backend: Optional[FilesystemBackend] = None  # 真实后端实例(初始为None)
         self._thread_id = rt.get_thread_id(runtime)  # 从运行时获取线程ID
         self._root_dir = os.path.join(ROOT_PATH_AGENT, self._thread_id)  # 构建根目录路径
+        self.skills = [] # 新增，用于存放技能列表
 
     def _ensure_backend(self) -> FilesystemBackend:
         """
@@ -39,13 +40,31 @@ class LazyFilesystemBackend(BackendProtocol):
         Returns:
             FilesystemBackend: 已初始化的文件系统后端实例
         """
-        if self._backend is None:
+        if self._backend is None: # 如果有新技能，要再创建
             os.makedirs(self._root_dir, exist_ok=True)  # 目录不存在则创建
+            source = r'content/skills' # 新增
+            destination = os.path.join(self._root_dir, SKILL_DIR_PATH) # 新增
+            if not os.path.exists(destination):
+                # 复制 文件
+                shutil.copytree(source, destination) # 新增
+            self.skills = os.listdir(destination)
             self._backend = FilesystemBackend(
                 root_dir=self._root_dir,  # 设置根目录
                 virtual_mode=True  # 启用虚拟模式
             )
+        elif self._check_if_new_skill():
+            self._backend = FilesystemBackend(
+                root_dir=self._root_dir,  # 设置根目录
+                virtual_mode=True  # 启用虚拟模式
+            )
+
         return self._backend
+
+    # 新增方法，检查是否有新的技能
+    def _check_if_new_skill(self):
+        destination = os.path.join(self._root_dir, SKILL_DIR_PATH)
+        return os.listdir(destination) != self.skills
+
 
     def ls_info(self, path: str):
         """
@@ -130,6 +149,12 @@ class LazyFilesystemBackend(BackendProtocol):
         """
         return self._ensure_backend().glob_info(pattern, path)
 
+    def upload_files(self, files: list[tuple[str, bytes]]):
+        return self._ensure_backend().upload_files(files)
+
+    def download_files(self, paths: list[str]):
+        return self._ensure_backend().download_files(paths)
+
 
 def create_session_backend(runtime):
     """
@@ -146,3 +171,5 @@ def create_session_backend(runtime):
         LazyFilesystemBackend: 懒加载的文件系统后端实例
     """
     return LazyFilesystemBackend(runtime)
+
+

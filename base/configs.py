@@ -15,6 +15,8 @@ MINIO_SECRET_KEY = os.getenv("MINIO_SECRET_KEY") if os.getenv("MINIO_SECRET_KEY"
 
 USER_UPLOAD_PATH = 'user_uploads'         # 用户上传文件保存目录
 GENERATE_IMAGE_PATH = 'generate_images'   # 生成图片保存目录
+SKILL_DIR_PATH = 'skills'
+CONVERSATION_HISTORY_PATH = 'conversation_history'
 ROOT_PATH_AGENT = '/agent_files'
 ROOT_PATH_SYSTEM = f'D:/{ROOT_PATH_AGENT}' if get_platform()==0 else ROOT_PATH_AGENT  # 系统工作根目录
 ROOT_SYSTEM = 'fD:/' if get_platform()==0 else '/'  # 系统根目录

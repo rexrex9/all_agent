@@ -3,8 +3,8 @@ from base import configs as gc
 
 def get_llm():
     llm = ChatOpenAI(
-            #model=gc.BASE_LLM,
-            model = "deepseek-ai/DeepSeek-V3.2",
+            model=gc.BASE_LLM,
+            #model = "deepseek-ai/DeepSeek-V3.2",
             base_url=gc.BASE_URL,
             temperature=0.1,
         )
@@ -26,7 +26,7 @@ def get_small_llm():
 def get_vlm():
     vlm = ChatOpenAI(
             model=gc.BASE_VLM,
-            base_url=gc.BASE_URL,
+            base_url='https://api.siliconflow.cn/v1',
     )
     return vlm
 
