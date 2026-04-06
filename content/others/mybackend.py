@@ -40,10 +40,11 @@ class LazyFilesystemBackend(BackendProtocol):
         Returns:
             FilesystemBackend: 已初始化的文件系统后端实例
         """
+        destination = os.path.join(self._root_dir, SKILL_DIR_PATH)  # 新增
         if self._backend is None: # 如果有新技能，要再创建
             os.makedirs(self._root_dir, exist_ok=True)  # 目录不存在则创建
             source = r'content/skills' # 新增
-            destination = os.path.join(self._root_dir, SKILL_DIR_PATH) # 新增
+
             if not os.path.exists(destination):
                 # 复制 文件
                 shutil.copytree(source, destination) # 新增
@@ -57,7 +58,7 @@ class LazyFilesystemBackend(BackendProtocol):
                 root_dir=self._root_dir,  # 设置根目录
                 virtual_mode=True  # 启用虚拟模式
             )
-
+            self.skills = os.listdir(destination) # 更新技能列表
         return self._backend
 
     # 新增方法，检查是否有新的技能
