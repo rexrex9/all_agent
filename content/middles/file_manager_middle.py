@@ -101,13 +101,12 @@ class FileMiddleware(AgentMiddleware[CustomState]):
         # 转换用户上传路径为当前线程的绝对路径
         dir_path = rt.change_file_path(USER_UPLOAD_PATH)
 
-        # 异步创建目录（如果不存在）
-        await asyncio.to_thread(os.makedirs, dir_path, exist_ok=True)
-
         # 获取用户上传的文件列表
         files = state.get('upload_files')
 
         if files:  # 如果有上传的文件
+            # 异步创建目录（如果不存在）
+            await asyncio.to_thread(os.makedirs, dir_path, exist_ok=True)
             content = f'用户上传了如下文件,已下载,文件路径如下:'
 
             # 遍历所有上传的文件
