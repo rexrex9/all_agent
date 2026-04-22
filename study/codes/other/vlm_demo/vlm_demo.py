@@ -14,3 +14,4 @@ messages = [HumanMessage(content=[{"type": "text", "text": "描述下图"},
                                      {"type": "image_url", "image_url": {"url": base64_url}}])]
 result = vlm.invoke(messages)
 print(result.content)
+

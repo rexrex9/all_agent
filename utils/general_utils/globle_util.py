@@ -17,5 +17,7 @@ def get_platform():
         #print("这是 macOS 系统")
         return 2
 
+
+
 if __name__ == '__main__':
     print(get_platform())
