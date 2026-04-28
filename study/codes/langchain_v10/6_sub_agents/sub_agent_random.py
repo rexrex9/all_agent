@@ -1,4 +1,4 @@
-from conn import llms
+from conn import llm
 from langchain.tools import tool
 
 @ tool
@@ -16,5 +16,5 @@ def get_agent():
         "description": "获取随机数的助手",
         "system_prompt": f"你是一个获取随机数的助手",
         "tools": [get_random_number],
-        "model": llms.get_llm()
+        "model": llm.get_llm(),
     }

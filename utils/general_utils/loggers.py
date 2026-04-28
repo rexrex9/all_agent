@@ -2,8 +2,9 @@
 import logging
 # 导入路径操作库
 import os
-from base import configs as gc
-LOG_FILE = os.path.join(gc.LOG_DIR, 'app.log')
+from base import config as cfg
+LOG_FILE = os.path.join(cfg.LOG_DIR, 'app.log')
+
 
 def setup_logging(log_file=LOG_FILE):
     # 创建日志目录
@@ -24,7 +25,7 @@ def setup_logging(log_file=LOG_FILE):
         file_handler.setFormatter(formatter)
         # 添加文件处理器
         logger.addHandler(file_handler)
-        if gc.NEED_CONSOLE_LOG:
+        if cfg.NEED_CONSOLE_LOG:
             # 创建控制台处理器
             console_handler = logging.StreamHandler()
             # 设置控制台处理器级别

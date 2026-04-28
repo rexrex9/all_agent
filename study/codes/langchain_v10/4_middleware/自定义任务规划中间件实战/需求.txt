@@ -1,0 +1,22 @@
+
+1. 先做一个有读写文件能力的Agent
+1.5 用langgraph cli启动项目
+
+2. 再做那个自定义任务规划中间件
+
+
+
+ModelRequest(model=ChatOpenAI(profile={},
+client=<openai.resources.chat.completions.completions.Completions object at 0x000001EDB119D6D0>,
+async_client=<openai.resources.chat.completions.completions.AsyncCompletions object at 0x000001EDB16C6E50>,
+ root_client=<openai.OpenAI object at 0x000001EDB10F6710>, root_async_client=<openai.AsyncOpenAI
+ object at 0x000001EDB16C6D10>, model_name='Qwen/Qwen3.5-27B', model_kwargs={},
+ openai_api_key=SecretStr('**********'), openai_api_base='https://api.siliconflow.cn/v1'),
+ messages=[HumanMessage(content='南京什么天气？', additional_kwargs={}, response_metadata={},
+ id='eec36b4b-5e0e-4468-9884-f692be18935c')],
+ system_message=SystemMessage(content='你是一个助手', additional_kwargs={}, response_metadata={}),
+ tool_choice=None, tools=[StructuredTool(name='get_weather',
+  description='获得天气的工具', args_schema=<class 'langchain_core.utils.pydantic.get_weather'>,
+  func=<function get_weather at 0x000001EDAB1298A0>)], response_format=None,
+  state={'messages': [HumanMessage(content='南京什么天气？', additional_kwargs={}, response_metadata={}, id='eec36b4b-5e0e-4468-9884-f692be18935c')]}, runtime=Runtime(context=None, store=None, stream_writer=<function Pregel.stream.<locals>.stream_writer at 0x000001EDB1742660>, previous=None), model_settings={})
+__

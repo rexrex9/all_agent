@@ -1,19 +1,16 @@
-import shutil
-import os
-def compress_dir(folder_path):
-    """
-    使用shutil压缩文件夹
-    Args:
-        folder_path: 要压缩的文件夹路径
-    """
-    output_path = shutil.make_archive(
-        base_name=folder_path,
-        format='zip',
-        root_dir=os.path.dirname(folder_path),
-        base_dir=os.path.basename(folder_path)
-    )
-    return output_path
+import shutil # 这是shutil模块，处理一些高级的文件操作，理解为一个更高级封装的os模块
 
-if __name__ == "__main__":
-    # 使用示例
-    compress_dir("D://agent_files/801984c4-662e-42de-a7e6-b5f734238241")
+# 打包文件夹成zip的方法：
+def zip_folder(folder_path, zip_path=None):
+    """
+    打包文件夹成zip文件
+    :param folder_path: 要打包的文件夹路径
+    :param zip_path: 压缩文件保存路径
+    """
+    if not zip_path:
+        zip_path = folder_path
+    return shutil.make_archive(zip_path, 'zip', folder_path)
+
+if __name__ == '__main__':
+    folder_path = r'D:\agent_files\9f4ad8ab-0642-4bbd-8f76-2fae9c8bd658' # 要打包的文件夹路径
+    print(zip_folder(folder_path))

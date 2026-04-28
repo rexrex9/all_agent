@@ -1,19 +1,22 @@
 
-from langchain.tools import tool
-from conn.llms import get_vlm
-from content.utils import base64_util as bu
+from conn.llm import get_vlm
+from utils.doc_utils import base64_utils as bu
 from langchain.messages import HumanMessage
 
 vlm = get_vlm()
-@ tool
-async def get_img_content(filepath):
+def read_image(image_path):
     """
-    阅读图片的工具
-    :param filepath: 文件地址
-    :return: str 图片内容
+    理解图片的工具
+    :param image_path: 图片的路径
+    :return:
     """
-    base64_url = bu.image_to_data_url(filepath)
+    base64_url = bu.image_to_data_url(image_path)
+
     messages = [HumanMessage(content=[{"type": "text", "text": "描述下图"},
-                                     {"type": "image_url", "image_url": {"url": base64_url}}])]
-    result = await vlm.ainvoke(messages)
-    return result
+                                      {"type": "image_url", "image_url": {"url": base64_url}}])]
+    result = vlm.invoke(messages)
+    return result.content
+
+if __name__ == "__main__":
+    image_path = 'bot.png'
+    print(read_image(image_path))

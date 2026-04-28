@@ -1,56 +1,66 @@
+
+from langgraph.graph import StateGraph,START,END
 from typing_extensions import TypedDict
-from langgraph.graph import StateGraph, START, END
 
-# 定义状态
+# 状态
+# 在整个工作流中传递数据的一个字典模板
 class State(TypedDict):
-    k1: int
+    a:str
+    b:int
 
-# 1. 初始化图
-workflow = StateGraph(State)
+# 如何声明一个工作节点
+def node1(state):
+    return {'a':'world'}
 
 
-def node(func):
-    """装饰器，自动将节点添加到工作流"""
-    node_name = func.__name__
-    workflow.add_node(node_name, func)
+def node2(state: State):
+    print('node2')
+    print(state['a'])
+    return {'b':1}
 
-@node
-def n1(state: State):
-    state["k1"]+= 1
-    return {"k1": state["k1"]}
+def node3(state):
+    print("node3")
 
-@node
-def n2(state: State):
-    print('in n2')
+def node4(state):
+    print("node4")
 
-@node
-def n3(state: State):
-    print('in n3')
 
-# 条件函数
-def flag_funcation(state: State):
-    if state["k1"]>3:
-        return "1"
+#条件函数
+def condiction_func(state):
+    # 判断条件返回字符串
+    if state['b'] > 10:
+        return '1'
     else:
-        return "0"
+        return '3'
 
-# 3. 添加连接边
-workflow.add_edge(START, "n1")
-# 条件边
-workflow.add_conditional_edges('n1', flag_funcation,{"0": "n2", "1": "n3"})
-workflow.add_edge("n2", END)
-workflow.add_edge("n3", END)
 
-# 4. 编译图
-graph = workflow.compile()
 
-# 5. 保存（可选）
-graph_image = graph.get_graph().draw_mermaid_png()
-image_path = "condition.png"
+sg = StateGraph(State) # 实例化一个StateGraph对象
+sg.add_node('n1',node1) # 添加一个工作节点
+sg.add_node('n2',node2)
+sg.add_node('n3',node3)
+sg.add_node('n4',node4)
+# 如何将工作节点连接(边)
+sg.add_edge(START,'n1')
+sg.add_edge('n1','n2')
+
+# 添加条件边
+sg.add_conditional_edges('n2',condiction_func,{'1': 'n3', '3': 'n4'})
+sg.add_edge('n3','n1')
+sg.add_edge('n4',END)
+
+# 如何运行工作流
+# 1. 先编译
+g = sg.compile()
+
+# 画图(可选)
+graph_image = g.get_graph().draw_mermaid_png()
+image_path = "simple.png"
 with open(image_path, "wb+") as f:
     f.write(graph_image)
 
-# 6. 执行
-state = graph.invoke({"k1": 3}, print_mode='updates')
-print(state)
 
+# 2. 再运行
+res = g.invoke({'a':'hello'})
+
+print(res)

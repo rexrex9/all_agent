@@ -1,51 +1,53 @@
-from langchain.agents import create_agent
-from langchain.tools import tool
-from langchain.agents.middleware import before_model, after_model
-import datetime
-from conn.llms import get_llm
-from common_utils import save_graph_img
-
-@tool
-def get_current_time():
-    """
-    获取当前时间
-    :return: 当前时间
-    """
-    return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+from langchain.agents import create_agent # 创建智能体的包
+from langchain.messages import HumanMessage
+from conn.llm import get_llm
+from langchain.agents.middleware import before_agent,after_agent,before_model,after_model
+from langchain.agents import AgentState
+from langgraph.runtime import Runtime
 
 
-# ============ 中间件示例 ============
+
+def get_weather(city: str) -> str:
+    """获得天气的工具"""
+    return f"它总是雨天在 {city}!"
+
+@before_agent
+def before_agent_middleware(state:AgentState,runtime:Runtime):
+    print('before_agent')
+    #print(state)
+    #print(runtime)
+    return state
+
+@after_agent
+def after_agent_middleware(state:AgentState,runtime:Runtime):
+    print('after_agent')
+    #print(state)
+    #print(runtime)
 
 @before_model
-def model_start(state,runtime):
-    print("before model")
-    return state
+def before_model_middleware(state:AgentState,runtime:Runtime):
+    print('before_model')
 
 @after_model
-def model_end(state,runtime):
-    print("after model")
-    return state
+def after_model_middleware(state:AgentState,runtime:Runtime):
+    print('after_model')
 
-# ============ 创建 Agent ============
 
 agent = create_agent(
-    model=get_llm(),
-    tools=[get_current_time],
-    system_prompt="你是一个助手",
-    # 传入中间件
-    middleware=[
-        model_start,
-        model_end,
-    ]
+    model=get_llm(), # 模型, 传一个llm实例
+    tools=[get_weather], # 工具集
+    system_prompt="你是一个助手", # 系统提示词
+    middleware=[before_agent_middleware,after_agent_middleware,before_model_middleware,after_model_middleware]
 )
+figure = agent.get_graph().draw_mermaid_png()
+with open("aaa.png", "wb+") as f:
+    f.write(figure)
 
-# 保存图
-save_graph_img(agent, "agent.png")
 
-# 执行
-print("=" * 50)
-res = agent.stream(
-    input={"messages": [{"role": "user", "content": "现在几点"}]}
-)
-for chunk in res:
-    print(chunk)
+res = agent.stream({"messages":[HumanMessage(content="南京什么天气？")]})
+for r in res:
+    print(r)
+
+
+
+

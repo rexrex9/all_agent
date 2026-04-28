@@ -15,4 +15,6 @@ def current_time():
     return datetime.datetime.now()
 
 if __name__ == "__main__":
+    print(1)
     mcp.run(transport='stdio')
+    print(2)

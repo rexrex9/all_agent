@@ -1,5 +1,5 @@
 from deepagents import create_deep_agent
-from conn.llms import get_llm
+from conn.llm import get_llm
 from sub_agent_random import get_agent as get_random_agent # 导入随机数的子Agent
 from sub_agent_time import get_agent as get_time_agnet # 导入获取时间的子Agent
 

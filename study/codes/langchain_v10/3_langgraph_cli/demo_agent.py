@@ -5,7 +5,7 @@ import datetime
 
 def get_llm():
     llm = ChatOpenAI(
-            model="Qwen/Qwen3-Next-80B-A3B-Instruct",
+            model="Qwen/Qwen3.5-122B-A10B",
             base_url="https://api.siliconflow.cn/v1",
             temperature=0.1,
         )

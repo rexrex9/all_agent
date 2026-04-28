@@ -1,24 +1,22 @@
 from deepagents import create_deep_agent
-from conn.llms import get_llm
+from conn.llm import get_llm
 from deepagents.backends.filesystem import FilesystemBackend
-from execute_middle import ExecuteMiddleware,ROOT_DIR
+import excute_middle
 
 
 agent = create_deep_agent(
-    backend=FilesystemBackend(root_dir=ROOT_DIR,virtual_mode= True),
+    backend=FilesystemBackend(root_dir=excute_middle.root_dir,virtual_mode=True),
     skills=["skills"],
     model=get_llm(),
-    middleware=[ExecuteMiddleware()],
+    tools= [],
+    middleware=[excute_middle.ExcuteMiddleware()],
     system_prompt=""",
     注意:
     1. skill的name并非工具名字。
-    2. 直到满足用户需求前都不要停止。
-    3. 你在windows环境中
     """
 )
 
-from utils.langchain_utils import stream_util as su
+for chunk in agent.stream({"messages": [{"role": "user", "content": "你手上有几个技能"}]}):
+    print(chunk)
 
-while True:
-    user = input("用户:")
-    su.stream_both(agent,user)
+

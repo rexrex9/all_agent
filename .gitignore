@@ -136,7 +136,6 @@ dmypy.json
 
 *.idea
 /env/serect.py
-/base/config.py
 /back/
 /content/aback/
 /aback/

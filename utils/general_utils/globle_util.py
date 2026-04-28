@@ -1,9 +1,5 @@
-import uuid
 import sys
-
-# 生成uuid
-def get_uuid():
-    return uuid.uuid4().hex
+# 判断当前的系统是windows，还是linux、mac
 
 def get_platform():
     platform = sys.platform
@@ -16,8 +12,3 @@ def get_platform():
     elif platform == "darwin":
         #print("这是 macOS 系统")
         return 2
-
-
-
-if __name__ == '__main__':
-    print(get_platform())

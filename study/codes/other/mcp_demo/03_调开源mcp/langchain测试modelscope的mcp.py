@@ -1,7 +1,7 @@
 # pip install langchain-mcp-adapters
-from conn.llms import get_llm
+from conn.llm import get_llm
 from langchain_mcp_adapters.client import MultiServerMCPClient
-from langgraph.prebuilt import create_react_agent
+from langchain.agents import create_agent
 
 client = MultiServerMCPClient(
     {
@@ -16,7 +16,7 @@ async def stream_response():
     tools = await client.get_tools()
     print(tools)
 
-    agent = create_react_agent(
+    agent = create_agent(
         get_llm(),
         tools=tools
     )

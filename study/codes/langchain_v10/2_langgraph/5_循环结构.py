@@ -1,54 +1,62 @@
+
+from langgraph.graph import StateGraph,START,END
 from typing_extensions import TypedDict
-from langgraph.graph import StateGraph, START, END
+# 需求：
+# 做一个能够跳出循环的循环工作流
+# 提示：可以通过计数循环次数判断要不要跳出
+# 要点：
+# 1. 构造一个条件函数
+# 2. 添加一个条件边
+# 3. 做一个loop_count的自增操作
 
-# 定义状态
+
 class State(TypedDict):
-    k1: int
+    loop_count:int
 
-# 1. 初始化图
-workflow = StateGraph(State)
+# 每次循环增加loop_count+1
+def node1(state):
+    loop_count = state['loop_count']+1
+    return {'loop_count':loop_count}
+def node2(state: State):
+    print(state)
 
-# 装饰器，自动将节点添加到工作流
-def node(func):
-    node_name = func.__name__
-    workflow.add_node(node_name, func)
 
-@node
-def n1(state: State):
-    state["k1"]+= 1
-    return {"k1": state["k1"]}
-
-@node
-def n2(state: State):
-    print('in n2')
-
-@node
-def n3(state: State):
-    print('in n3')
-
-# 条件函数
-def flag_funcation(state: State):
-    if state["k1"]>3:
-        return "1"
+# 弄个条件函数判断loop_count是不是大于3
+def condiction_func(state):
+    if state['loop_count']>3:
+        return 'end'
     else:
-        return "0"
+        return 'continue'
 
-# 3. 添加连接边
-workflow.add_edge(START, "n1")
-# 条件边
-workflow.add_conditional_edges('n1', flag_funcation,{"0": "n2", "1": "n3"})
-workflow.add_edge("n2", "n1")
-workflow.add_edge("n3", END)
+sg = StateGraph(State) # 实例化一个StateGraph对象
+sg.add_node('n1',node1) # 添加一个工作节点
+sg.add_node('n2',node2)
+# 如何将工作节点连接(边)
+sg.add_edge(START,'n1')
+# 添加一个条件边
+sg.add_conditional_edges(
+    # 起始节点
+    'n1',
+    # 条件函数
+    condiction_func,
+    # 路径字典
+    {'continue': 'n2', 'end': END}
+)
 
-# 4. 编译图
-graph = workflow.compile()
+sg.add_edge('n2','n1')
 
-# 5. 保存（可选）
-graph_image = graph.get_graph().draw_mermaid_png()
-image_path = "loop.png"
+
+# 如何运行工作流
+# 1. 先编译
+g = sg.compile()
+
+# 画图(可选)
+graph_image = g.get_graph().draw_mermaid_png()
+image_path = "simple.png"
 with open(image_path, "wb+") as f:
     f.write(graph_image)
 
-# 6. 执行
-state = graph.invoke({"k1": 0}, print_mode='updates')
-print(state)
+# 2. 再运行
+res = g.invoke({'loop_count':0})
+
+print(res)

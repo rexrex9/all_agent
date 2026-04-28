@@ -1,49 +1,52 @@
-from minio import Minio
-from base import configs as cfg
 
+import minio
+from base import config as cfg
 
 class MinioConn:
-    def __init__(self):
-        self.client = self.create_client()
-        self.bucket_name = 'stores'
-        self._init_bucket()
 
-    def create_client(self):
-        """连接MINIO客户端"""
-        return Minio(
+    def __init__(self):
+        self.minio_client = minio.Minio(
             cfg.MINIO_ENDPOINT,
             access_key=cfg.MINIO_ACCESS_KEY,
             secret_key=cfg.MINIO_SECRET_KEY,
-            secure=False
+            secure=False # 不去验证安全证书
         )
-    def _init_bucket(self):
-        """创建bucket"""
-        if self.client.bucket_exists(self.bucket_name):
-            return
-        self.client.make_bucket(self.bucket_name)
+
+    # 创建存储桶
+    def create_bucket(self,bucket_name):
+        self.minio_client.make_bucket(bucket_name)
+
+    # 创建存储桶(如果存在则不创建)
+    def create_bucket_if_not_exists(self,bucket_name):
+        if not self.minio_client.bucket_exists(bucket_name):
+            self.minio_client.make_bucket(bucket_name)
 
 
-    def upload_obj(self, object_name, file_path):
+    # 删除存储桶
+    def delete_bucket(self,bucket_name):
+        self.minio_client.remove_bucket(bucket_name)
+
+    # 上传文件
+    def upload_file(self,bucket_name, object_name,file_path):
         """
-        上传文件
-        :param object_name: minio文件名
-        :param file_path:  本地路径
+        :param bucket_name: 存储桶的名字
+        :param object_name: 在minio上的文件名
+        :param file_path:  本地文件所在路径
         :return:
         """
-        self.client.fput_object(self.bucket_name, object_name, file_path)
+        self.minio_client.fput_object(bucket_name, object_name, file_path)
+
+    # 下载文件
+    def download_file(self,bucket_name, object_name,file_path):
+        self.minio_client.fget_object(bucket_name, object_name, file_path)
 
 
-    def gen_presigned_url(self, object_name):
-        """
-        生成下载的url
-        :param object_name: minio文件名
-        :return: 下载的url
-        """
-        presigned_url = self.client.presigned_get_object(self.bucket_name, object_name)
-        return presigned_url
+    # 获得下载连接
+    def get_download_url(self,bucket_name, object_name):
+        return self.minio_client.presigned_get_object(bucket_name, object_name)
 
 
 if __name__ == '__main__':
     mc = MinioConn()
-    #mc.upload_obj('a.txt',r'D:\workspace\pythonworkspace\projects\all_agent\content\mytools\a.txt')
-    #print(mc.gen_presigned_url('a.txt'))
+    a = mc.get_download_url('my-bucket1','b.txt')
+    print(a)

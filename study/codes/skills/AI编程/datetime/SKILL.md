@@ -1,12 +1,12 @@
 ---
 name: datetime
-description: 当用户询问当前日期或时间时使用此技能。
+description: 获得当前时间的技能
 ---
 
-## 说明
-当用户询问当前日期或时间时，使用 get_datetime.py 脚本，将输出结果用中文报告给用户。
+# datetime
 
-## 脚本
-`scripts/` 目录包含辅助脚本：
-- `scripts/get_datetime.py` - 得到当前时间
+### 操作过程
+当要获得当时间时间时，去调用获得当前时间的python脚本，脚本位置在scripts/get_current_time.py
 
+### 文件目录
+/scripts/get_current_time.py # 获得当前时间的脚本

@@ -16,7 +16,5 @@ async def main():
     # 并行运行多个任务
     await asyncio.gather(task1(), task2())
 
-async def aaa():
-    await task1()
 
-asyncio.run(aaa())
+asyncio.run(main())

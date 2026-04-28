@@ -1,0 +1,16 @@
+docker run -p 9116:9115 hello2
+
+
+# 注释以井号开头
+
+key: value  # 键值对
+list: # 列表
+  - item1
+  - item2
+
+ {key:value,list:[item1,item2],nested:{child:value}}
+
+
+
+nested: # 嵌套字典
+  child: value

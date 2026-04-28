@@ -1,8 +1,9 @@
+version: '3.8'
+
 services:
-  # PostgreSQL 数据库
   postgres:
     image: pgvector/pgvector:pg16
-    container_name: allagent-postgres
+    container_name:  allagent-postgres
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
@@ -10,55 +11,54 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]  # 使用 pg_isready 检查数据库就绪状态
+      interval: 10s    # 每10秒检查一次
+      timeout: 5s      # 检查超时时间5秒
+      retries: 5       # 失败重试5次
     networks:
       - allagent-network
 
-  # Redis 缓存
+
   redis:
     image: redis:6
     container_name: allagent-redis
-    command: redis-server --appendonly yes --requirepass redis123
+    command: redis-server --appendonly yes --requirepass redis123  # 启动命令：启用AOF持久化并设置访问密码
     volumes:
       - redis_data:/data
     healthcheck:
-      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      test: [ "CMD", "redis-cli", "ping"]
       interval: 10s
       timeout: 5s
       retries: 5
     networks:
       - allagent-network
 
-  # MinIO 对象存储
+
   minio:
     image: minio/minio:latest
     container_name: allagent-minio
-    ports:
-      - "${MINIO_PORT:-9000}:9000"
-      - "${MINIO_CONSOLE_port:-9001}:9001"
-    environment:
-      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY:-minioadmin}
-      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY:-minioadmin}
-      MINIO_SECURE: "false"
+    command: server /data --console-address ":9001"  # 启动命令，指定数据目录和控制台端口
     volumes:
       - minio_data:/data
-    command: server /data --console-address ":9001"
+    ports:
+      - "${MINIO_PORT:-9000}:9000"  # API 服务端口（可通过环境变量 MINIO_PORT 覆盖，默认 9000）
+      - "${MINIO_CONSOLE_PORT:-9001}:9001"  # 控制台端口（可通过环境变量 MINIO_CONSOLE_port 覆盖，默认 9001）
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY:-minioadmin}      # 管理员用户名（默认 minioadmin）
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY:-minioadmin}  # 管理员密码（默认 minioadmin）
+      MINIO_SECURE: "false"  # 禁用 HTTPS（我们没有买域名，暂时无法使用HTTPS）
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:9000/minio/health/live" ]
-      interval: 30s
-      timeout: 20s
-      retries: 3
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       - allagent-network
 
-  # ppt-mcp
+
   ppt-mcp:
-    image: rexrex9/allagent-ppt-mcp:latest
+    image: rexrex9/allagent-ppt-mcp:v0.1
     container_name: allagent-ppt-mcp
-    command: python server.py
     volumes:
       - agent_files:/agent_files
     healthcheck:
@@ -69,12 +69,21 @@ services:
     networks:
       - allagent-network
 
-  allagent:
+
+  all-agent:
+    image: rexrex9/allagent-server:v0.1
     container_name: allagent-server
-    image: rexrex9/allagent-server:latest
     ports:
       - "${AGENT_SERVER_PORT:-8000}:8000"
     command: langgraph up --port 8000
+    volumes:
+      - agent_files:/agent_files
+    env_file:
+      - .env
+    environment:
+      PPT_MCP_URL: http://ppt-mcp:4810/mcp
+      DATABASE_URI: postgres://postgres:postgres@postgres:5432/postgres
+      REDIS_URI: redis://:redis123@redis:6379
     depends_on:
       postgres:
         condition: service_healthy
@@ -84,38 +93,27 @@ services:
         condition: service_healthy
       ppt-mcp:
         condition: service_healthy
-    restart: unless-stopped
-    env_file:
-      - .env
-    environment:
-      DATABASE_URI: postgresql://postgres:postgres@postgres:5432/postgres
-      REDIS_URI: redis://:redis123@redis:6379
-      PPT_MCP_URL: "http://ppt-mcp:4810/mcp"
-    volumes:
-      - agent_files:/agent_files
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:8000/ok" ]
-      interval: 60s
-      timeout: 10s
-      retries: 3
+      interval: 10s
+      timeout: 20s
+      retries: 5
       start_period: 90s
     networks:
       - allagent-network
 
-  # 前端服务 - Agent Chat UI
-  agent-chat-ui:
-    image: rexrex9/allagent-ui:latest
-    container_name: allagent-frontend
-    ports:
-      - "${AGENT_UI_PORT:-3000}:3000"
-    depends_on:
-      allagent:
-        condition: service_healthy
-    restart: unless-stopped
-    environment:
-      API_URL: "http://${HOST_IP}:${AGENT_SERVER_PORT:-8000}"
-    networks:
-      - allagent-network
+  allagent-ui:
+      image: rexrex9/allagent-ui:v0.1
+      container_name: allagent-ui
+      depends_on:
+        all-agent:
+          condition: service_healthy
+      ports:
+        - "${AGENT_UI_PORT:-3000}:3000"
+      environment:
+        NEXT_PUBLIC_API_URL: http://${HOST_IP:-localhost}:${AGENT_SERVER_PORT:-8000}
+      networks:
+        - allagent-network
 
 volumes:
   postgres_data:

@@ -1,5 +1,5 @@
 # 辅助理解代码
-from conn.llms import get_llm
+from conn.llm import get_llm
 import json
 import datetime
 import re
@@ -99,9 +99,10 @@ def do(question):
 if __name__ == '__main__':
     # 测试不同场景
     questions = [
-        "123加456等于多少？",
-        "现在几点了？",
-        "你好，今天天气怎么样？"
+        "现在几点，并且告诉我123+222等于多少"
+        # "123加456等于多少？",
+        # "现在几点了？",
+        # "你好，今天天气怎么样？"
     ]
 
     for q in questions:

@@ -48,6 +48,7 @@
 - 工具调用
 - 自主任务规划
 - 多轮对话和上下文理解
+- Agent Skill的制作与接入
 
 ### 多模态能力
 
@@ -71,6 +72,8 @@
 - 插件化工具系统
 - 支持自定义子代理
 - 支持自定义中间件
+- 支持MCP接入
+- 支持Agent Skill接入
 
 
 
@@ -118,26 +121,19 @@ docker compose -f docker-compose.build.yml up --build  -d
 
 
 - **Python 3.11+** - 主要开发语言，提供强大的异步支持和类型提示
-
 - **MCP (Model Context Protocol)** - 模型上下文协议，实现模型与工具的安全交互
-
+- **Agent Skill** - 可插拔的技能模块，支持动态加载与热更新
 - **Docker & Docker Compose** - 容器化部署和编排，确保环境一致性
-
 - **LangChain 生态**
   - **LangChain v1.0** - AI应用开发框架
   - **LangGraph** - 工作流编排
   - **LangSmith** - AI应用可观测性平台，提供追踪、评估和监控
   - **DeepAgent** - langchain生态下的深度Agent
   - **Agent-Chat-UI** - 现成的前端用户界面 
-
 - **PostgreSQL** - 关系型数据库，存储应用数据和用户配置
-
 - **MinIO** - 高性能对象存储服务，用于文件管理和存储
-
 - **Redis** - 内存数据存储，提供缓存、会话管理和消息队列功能
-
 - **SiliconFlow API** - 大模型服务提供商，支持LLM、VLM、图像生成等多种AI模型
-
 - **Tavily Search** - 联网搜索服务，提供实时信息获取能力
 
 
@@ -152,6 +148,7 @@ docker compose -f docker-compose.build.yml up --build  -d
 │   ├── middles/       # 中间件
 │   ├── mytools/       # 自定义工具
 │   ├── others/        # 其他功能
+│   ├── skills/        # 初始的技能目录
 │   ├── sub_agents/    # 子代理
 │   └── utils/         # 工具函数
 ├── sub_projects/      # 子项目

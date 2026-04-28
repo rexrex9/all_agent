@@ -1,0 +1,24 @@
+[project]
+name = "pptx-mcp-server"
+version = "0.1.0"
+description = "Create Slides with a simple Python MCP server using Python PPTX library"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastmcp>=2.2.0",
+    "numpy>=2.2.5",
+    "pillow>=11.2.1",
+    "python-pptx>=1.0.2",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3.5",
+    "pytest-asyncio>=0.26.0",
+    "ruff>=0.11.6",
+]
+
+[tool.uv.workspace]
+members = [
+    "agent_examples/adk",
+]

@@ -1,0 +1,8 @@
+version: '3.8'
+
+services:
+  hello2:
+    image: hello2
+    ports:
+      - "9116:9115"
+

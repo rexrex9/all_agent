@@ -3,5 +3,8 @@
   "graphs": {
     "agent": "./demo_agent.py:agent"
   },
+  "dockerfile_lines": [
+    "RUN pip install langchain langchain_openai"
+  ],
   "env": ".env"
 }
