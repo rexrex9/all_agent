@@ -7,7 +7,7 @@ WORKDIR /app
 # 安装pnpm
 RUN npm install -g pnpm
 
-# 复制项目文件（.dockerignore会排除.env文件）
+# 复制项目文件
 COPY . .
 
 # 安装依赖

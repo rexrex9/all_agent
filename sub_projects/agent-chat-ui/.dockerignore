@@ -7,7 +7,7 @@ node_modules
 out
 
 # 环境文件
-# .env
+.env
 .env.local
 .env.development.local
 .env.test.local

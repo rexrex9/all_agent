@@ -46,6 +46,7 @@ import {
   ArtifactTitle,
   useArtifactContext,
 } from "./artifact";
+import { APP_CONFIG } from "@/config";
 
 function StickyToBottomContent(props: {
   content: ReactNode;
@@ -375,7 +376,7 @@ export function Thread() {
                     height={32}
                   />
                   <span className="text-xl font-semibold tracking-tight">
-                    真-超级通用智能体
+                    {APP_CONFIG.name}
                   </span>
                 </motion.button>
                 <div className="flex items-center gap-4">
@@ -455,7 +456,7 @@ export function Thread() {
                     <div className="flex items-center gap-3">
                       <LangGraphLogoSVG className="h-8 flex-shrink-0" />
                       <h1 className="text-2xl font-semibold tracking-tight">
-                        真-超级通用智能体
+                        {APP_CONFIG.name}
                       </h1>
                     </div>
                   )}
